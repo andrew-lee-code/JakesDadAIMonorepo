@@ -1,0 +1,35 @@
+{
+  "name": "jakes-dad-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo for Jakes Dad fantasy football league projects",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "install:all": "npm install && cd apps/mcp-server && uv sync && cd ../.. && cd scripts && uv sync && cd ..",
+    "mcp:dev": "turbo run dev --filter=mcp",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push",
+    "db:status": "supabase status",
+    "db:studio": "supabase studio",
+    "functions:serve": "supabase functions serve",
+    "functions:deploy": "supabase functions deploy"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "packageManager": "npm@10.2.4"
+}
