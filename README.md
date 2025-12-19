@@ -167,6 +167,49 @@ npm run functions:deploy       # Deploy to production
 
 See [supabase/README.md](supabase/README.md) for detailed documentation.
 
+### CI/CD Deployment
+
+The project uses GitHub Actions to automatically deploy changes when code is pushed to the `main` branch.
+
+**What gets deployed automatically:**
+- Database migrations (when `supabase/` changes)
+- Web app (when `apps/web/` changes) - _Coming soon_
+
+**Required GitHub Secrets:**
+
+To enable automated deployments, add these secrets to your GitHub repository:
+
+1. Go to your GitHub repository → Settings → Secrets and variables → Actions
+2. Add the following secrets:
+
+| Secret Name | Description | Where to find it |
+|------------|-------------|------------------|
+| `SUPABASE_ACCESS_TOKEN` | Your Supabase personal access token | [Supabase Dashboard](https://supabase.com/dashboard/account/tokens) → Account → Access Tokens |
+| `SUPABASE_PROJECT_REF` | Your production project reference ID | Supabase Dashboard → Project Settings → General → Reference ID |
+
+**How it works:**
+
+The deployment workflow ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)) runs when you push to `main`:
+
+1. **Detect Changes**: Checks which parts of the monorepo changed
+2. **Deploy Database** (if `supabase/` changed):
+   - Links to production Supabase project
+   - Pushes database migrations
+   - Verifies deployment
+3. **Deploy Web App** (if `apps/web/` changed):
+   - _Placeholder for future implementation_
+
+**Manual deployment:**
+
+You can still deploy manually:
+```bash
+# Deploy database migrations
+npm run db:push
+
+# Deploy edge functions
+npm run functions:deploy
+```
+
 **Other Turborepo commands:**
 ```bash
 npm run build             # Build all packages
