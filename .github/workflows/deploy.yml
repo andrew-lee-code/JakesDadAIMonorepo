@@ -102,6 +102,7 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./apps/web
         run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
 
       - name: Build project artifacts
@@ -109,15 +110,15 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: vercel build --prod --token=$VERCEL_TOKEN
         working-directory: ./apps/web
+        run: vercel build --prod --token=$VERCEL_TOKEN
 
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./apps/web
         run: |
           url=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
           echo "✅ Deployed to: $url"
-        working-directory: ./apps/web
