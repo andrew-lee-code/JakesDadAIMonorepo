@@ -70,6 +70,50 @@ src/
 - **Vite** - Build tool and development server
 - **ESLint** - Code linting
 
+## Deployment
+
+This app is deployed to Vercel with automatic deployments on push to `main`.
+
+### Vercel Project Configuration
+
+To deploy this monorepo app to Vercel, configure your Vercel project with these settings:
+
+1. **General Settings**:
+   - **Framework Preset**: Vite
+   - **Root Directory**: `apps/web`
+   - **Node Version**: 18.x or higher
+
+2. **Build & Development Settings**:
+   - **Build Command**: `cd ../.. && npm run build --workspace=@jakes-dad/shared && npm run build --workspace=jakesdadwebsite`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install --legacy-peer-deps`
+
+3. **Environment Variables**:
+   Add these in your Vercel project settings:
+   - `VITE_SUPABASE_URL` - Your Supabase project URL
+   - `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+
+### How it Works
+
+- Vercel's GitHub integration automatically deploys on every push to `main`
+- The build command ensures the shared package (`@jakes-dad/shared`) builds first
+- Dependencies are installed from the monorepo root to include workspace packages
+- Environment variables are injected at build time
+
+### Manual Deployment
+
+To deploy manually using Vercel CLI:
+
+```bash
+# From the monorepo root
+npm run build --workspace=@jakes-dad/shared
+npm run build --workspace=jakesdadwebsite
+
+# From apps/web
+cd apps/web
+vercel --prod
+```
+
 ## Contributing
 
 1. Fork the repository

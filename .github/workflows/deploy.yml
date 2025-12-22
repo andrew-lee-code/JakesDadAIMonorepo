@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       supabase: ${{ steps.filter.outputs.supabase }}
-      webapp: ${{ steps.filter.outputs.webapp }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,9 +28,6 @@ jobs:
           filters: |
             supabase:
               - 'supabase/**'
-            webapp:
-              - 'apps/web/**'
-              - 'packages/shared/**'
 
   # Deploy database migrations to production
   deploy-database:
@@ -69,44 +65,3 @@ jobs:
         run: |
           echo "✅ Database migrations deployed successfully"
           supabase migration list
-
-  # Deploy web app to Vercel
-  deploy-webapp:
-    name: Deploy Web App to Vercel
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    # Only run if webapp or shared package changed
-    if: needs.detect-changes.outputs.webapp == 'true'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Build shared package first
-        run: npm run build --workspace=@jakes-dad/shared
-
-      - name: Build web app
-        run: npm run build --workspace=jakesdadwebsite
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        working-directory: ./apps/web
-        run: |
-          # Deploy the pre-built dist directory
-          url=$(vercel --prod --token=$VERCEL_TOKEN)
-          echo "✅ Deployed to: $url"
