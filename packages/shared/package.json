@@ -1,0 +1,45 @@
+{
+  "name": "@jakes-dad/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared types, theme, and utilities for Jakes Dad monorepo",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./theme": {
+      "import": "./dist/theme.js",
+      "types": "./dist/theme.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./fonts.css": "./fonts.css"
+  },
+  "files": [
+    "dist",
+    "fonts",
+    "fonts.css"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "types:generate": "supabase gen types typescript --local > types.ts",
+    "dev": "tsc --watch"
+  },
+  "peerDependencies": {
+    "@mui/material": "^5.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@mui/material": "^5.15.0",
+    "@types/react": "^18.2.43",
+    "react": "^18.2.0",
+    "typescript": "^5.3.3"
+  }
+}
