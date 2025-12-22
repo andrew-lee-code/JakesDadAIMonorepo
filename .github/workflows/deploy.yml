@@ -31,6 +31,7 @@ jobs:
               - 'supabase/**'
             webapp:
               - 'apps/web/**'
+              - 'packages/shared/**'
 
   # Deploy database migrations to production
   deploy-database:
@@ -69,25 +70,54 @@ jobs:
           echo "✅ Database migrations deployed successfully"
           supabase migration list
 
-  # Deploy web app to production
-  # This job is a placeholder for future implementation
+  # Deploy web app to Vercel
   deploy-webapp:
-    name: Deploy Web App
+    name: Deploy Web App to Vercel
     runs-on: ubuntu-latest
     needs: detect-changes
-    # Only run if webapp directory changed
+    # Only run if webapp or shared package changed
     if: needs.detect-changes.outputs.webapp == 'true'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Placeholder for webapp deployment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build shared package
+        run: npm run build --workspace=@jakes-dad/shared
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel environment information
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+
+      - name: Build project artifacts
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --prod --token=$VERCEL_TOKEN
+        working-directory: ./apps/web
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          echo "🚧 Web app deployment not yet implemented"
-          echo "This job will be implemented when the web app is ready for deployment"
-          # Future steps:
-          # - Setup Node.js
-          # - Install dependencies
-          # - Build the app
-          # - Deploy to hosting provider (Vercel, Netlify, etc.)
+          url=$(vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN)
+          echo "✅ Deployed to: $url"
+        working-directory: ./apps/web
