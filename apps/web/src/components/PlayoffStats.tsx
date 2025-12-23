@@ -12,7 +12,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import {
   BarChart,
   Bar,

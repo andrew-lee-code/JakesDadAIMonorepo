@@ -32,7 +32,7 @@ Build the feature with tests.
 
 Review code, test functionality, and create MR.
 
-## The Five Subagents
+## The Six Subagents
 
 All subagents are defined in `.claude/agents/` and have access to domain knowledge in `.claude/resources/`.
 
@@ -79,6 +79,17 @@ Implement [feature name] following the plan and design.
 ```
 
 **Resources**: All resource files
+
+### Debugger (`debug`)
+**Role**: Investigates issues and determines root causes
+
+**How to use**:
+```
+Please read .claude/agents/debug.md and act as the Debugger.
+Investigate [issue description or error].
+```
+
+**Resources**: Technical standards, database schema, UI/UX guidelines, BMAD workflow
 
 ### Reviewer (`review`)
 **Role**: Reviews code and creates merge requests
@@ -242,6 +253,7 @@ Claude (as Reviewer): I'll review the code and test the feature.
 - **Designer**: `Please read .claude/agents/design.md and act as the UX Designer. [task]`
 - **Architect**: `Please read .claude/agents/architect.md and act as the Architect. [task]`
 - **Developer**: `Please read .claude/agents/build.md and act as the Developer. [task]`
+- **Debugger**: `Please read .claude/agents/debug.md and act as the Debugger. [task]`
 - **Reviewer**: `Please read .claude/agents/review.md and act as the Reviewer. [task]`
 
 ### Design System

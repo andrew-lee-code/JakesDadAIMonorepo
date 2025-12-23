@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box } from "@jakes-dad/shared";
 import Navigation from "./components/Navigation";
 import Home from "./pages/Home/Home";
 import HardwareStore from "./pages/HardwareStore/HardwareStore";

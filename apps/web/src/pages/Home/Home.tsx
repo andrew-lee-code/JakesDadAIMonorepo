@@ -1,4 +1,4 @@
-import { Box, Typography, Avatar, Paper, Chip, Button } from "@mui/material";
+import { Box, Typography, Avatar, Paper, Chip, Button } from "@jakes-dad/shared";
 import { Link } from "react-router-dom";
 import { useCurrentChampions } from "../../hooks/useCurrentChampions";
 

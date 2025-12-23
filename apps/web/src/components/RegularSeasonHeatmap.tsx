@@ -1,4 +1,4 @@
-import { Box, Typography, CircularProgress, Alert } from "@mui/material";
+import { Box, Typography, CircularProgress, Alert } from "@jakes-dad/shared";
 import { useMemo } from "react";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { useOwners } from "../hooks/useRecords";

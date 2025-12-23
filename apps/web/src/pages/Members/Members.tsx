@@ -14,7 +14,7 @@ import {
   Alert,
   Switch,
   FormControlLabel,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import { useState } from "react";
 import { useMemberStats } from "../../hooks/useRecords";
 

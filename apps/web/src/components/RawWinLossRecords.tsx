@@ -9,7 +9,7 @@ import {
   TableRow,
   CircularProgress,
   Alert,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { capitalizeName } from "../utils/stringUtils";
 

@@ -9,7 +9,7 @@ import {
   Alert,
   Switch,
   FormControlLabel,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { capitalizeName } from "../utils/stringUtils";

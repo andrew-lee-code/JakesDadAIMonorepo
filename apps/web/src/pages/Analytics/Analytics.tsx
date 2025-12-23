@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Paper } from "@mui/material";
+import { Box, Typography, Button, Paper } from "@jakes-dad/shared";
 import GoatsAndWoats from "../../components/GoatsAndWoats";
 import RegularSeasonHeatmap from "../../components/RegularSeasonHeatmap";
 import PlayoffStats from "../../components/PlayoffStats";
