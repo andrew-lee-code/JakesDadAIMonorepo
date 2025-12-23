@@ -169,39 +169,152 @@ See [supabase/README.md](supabase/README.md) for detailed documentation.
 
 ### CI/CD Deployment
 
-The project uses GitHub Actions to automatically deploy changes when code is pushed to the `main` branch.
+The project uses a hybrid deployment strategy:
+- **GitHub Actions** for database migrations (infrastructure)
+- **Vercel** for web applications (frontend)
 
-**What gets deployed automatically:**
-- Database migrations (when `supabase/` changes)
-- Web app (when `apps/web/` changes) - _Coming soon_
+This separation ensures database changes are controlled via CI/CD while web apps benefit from Vercel's edge network and optimizations.
 
-**Required GitHub Secrets:**
+---
 
-To enable automated deployments, add these secrets to your GitHub repository:
+## Vercel Deployment (Web Apps)
 
-1. Go to your GitHub repository → Settings → Secrets and variables → Actions
+This monorepo uses **Vercel's native Turborepo integration** with automatic build skipping. Each app in `/apps/*` gets its own Vercel project, and Vercel intelligently skips builds when apps haven't changed.
+
+### Initial Setup (One-Time Per App)
+
+1. **Create Vercel Project**:
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New..." → "Project"
+   - Import your GitHub repository
+   - Select the app to deploy (e.g., `apps/web`)
+
+2. **Configure Project Settings**:
+
+   **General:**
+   - **Framework Preset**: Vite (or framework for your app)
+   - **Root Directory**: `apps/web` (or path to your app)
+   - **Node Version**: 18.x or higher
+
+   **Build & Development:**
+   - **Build Command**: `turbo run build`
+   - **Output Directory**: `dist` (or your app's output)
+   - **Install Command**: (leave default - auto-detected)
+
+3. **Set Environment Variables**:
+   - Go to Project Settings → Environment Variables
+   - Add your app's environment variables:
+     ```
+     VITE_SUPABASE_URL = <your-supabase-url>
+     VITE_SUPABASE_ANON_KEY = <your-supabase-anon-key>
+     ```
+   - Set for: Production, Preview, Development
+
+4. **Deploy**:
+   - Vercel will deploy automatically
+   - Future pushes to `main` trigger automatic deployments
+
+### How Automatic Build Skipping Works
+
+Vercel analyzes your Turborepo dependency graph on every push:
+
+**✅ Builds When:**
+- App code changes (`apps/web/src/**`)
+- App dependencies change (`packages/shared/**` if app uses it)
+- `package.json` changes
+- Environment variables change
+- First commit on new branch
+
+**❌ Skips When:**
+- Other apps change (`apps/admin/**`)
+- Database migrations (`supabase/**`)
+- Documentation only (`README.md`, `*.md`)
+- No relevant changes detected
+
+**Example Scenarios:**
+
+| Change | `apps/web` Vercel Project | `apps/admin` Vercel Project |
+|--------|--------------------------|----------------------------|
+| Edit `apps/web/src/App.tsx` | ✅ Builds | ❌ Skips |
+| Edit `packages/shared/theme.ts` | ✅ Builds | ✅ Builds (if depends on shared) |
+| Edit `supabase/migrations/003.sql` | ❌ Skips | ❌ Skips |
+| Edit `apps/admin/index.html` | ❌ Skips | ✅ Builds |
+| Edit `README.md` | ❌ Skips | ❌ Skips |
+
+### Scaling to Multiple Apps
+
+To add more apps to Vercel:
+
+1. **Create New App** in `/apps/` directory
+2. **Create Vercel Project**:
+   - Import same GitHub repo
+   - Set root directory to `apps/new-app`
+   - Build command: `turbo run build`
+3. **Configure Environment Variables**
+4. **Deploy**
+
+Each app:
+- Has its own Vercel project
+- Deploys independently
+- Shares Turborepo cache
+- Only builds when needed
+
+**No limit on apps** - easily scale to 10+ projects.
+
+### Vercel Deployment Status
+
+After setup, every push to `main`:
+- Vercel checks each project for changes
+- Builds only affected apps
+- Provides deployment preview URLs for PRs
+
+View deployment status:
+- Vercel Dashboard: [vercel.com/dashboard](https://vercel.com/dashboard)
+- GitHub PR checks: Vercel bot comments with preview URLs
+
+### Manual Deployment to Vercel
+
+```bash
+# Build specific app
+turbo run build --filter=jakesdadwebsite
+
+# Deploy from app directory
+cd apps/web
+vercel --prod
+```
+
+---
+
+## GitHub Actions Deployment (Database)
+
+Database migrations are deployed via GitHub Actions for better control and auditability.
+
+### Required GitHub Secrets
+
+To enable automated database deployments, add these secrets to your GitHub repository:
+
+1. Go to GitHub repository → Settings → Secrets and variables → Actions
 2. Add the following secrets:
 
 | Secret Name | Description | Where to find it |
 |------------|-------------|------------------|
-| `SUPABASE_ACCESS_TOKEN` | Your Supabase personal access token | [Supabase Dashboard](https://supabase.com/dashboard/account/tokens) → Account → Access Tokens |
-| `SUPABASE_PROJECT_REF` | Your production project reference ID | Supabase Dashboard → Project Settings → General → Reference ID |
+| `SUPABASE_ACCESS_TOKEN` | Supabase personal access token | [Supabase Dashboard](https://supabase.com/dashboard/account/tokens) → Account → Access Tokens |
+| `SUPABASE_PROJECT_REF` | Production project reference ID | Supabase Dashboard → Project Settings → General → Reference ID |
 
-**How it works:**
+### How It Works
 
 The deployment workflow ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)) runs when you push to `main`:
 
-1. **Detect Changes**: Checks which parts of the monorepo changed
-2. **Deploy Database** (if `supabase/` changed):
+1. **Detect Changes**: Checks if `supabase/**` directory changed
+2. **Deploy Database** (only if migrations changed):
    - Links to production Supabase project
    - Pushes database migrations
    - Verifies deployment
-3. **Deploy Web App** (if `apps/web/` changed):
-   - _Placeholder for future implementation_
 
-**Manual deployment:**
+**Smart Detection**: If only web app code changes, database deployment is skipped.
 
-You can still deploy manually:
+### Manual Database Deployment
+
 ```bash
 # Deploy database migrations
 npm run db:push
@@ -209,6 +322,34 @@ npm run db:push
 # Deploy edge functions
 npm run functions:deploy
 ```
+
+---
+
+## Deployment Architecture Summary
+
+```
+Push to main
+     │
+     ├─> GitHub Actions (runs immediately)
+     │   └─> Detects `supabase/**` changes
+     │       └─> Deploys migrations to Supabase
+     │
+     └─> Vercel (runs in parallel)
+         ├─> Checks `apps/web` + `packages/shared`
+         │   └─> Builds & deploys if changed
+         │
+         ├─> Checks `apps/admin` + dependencies
+         │   └─> Builds & deploys if changed
+         │
+         └─> Checks `apps/...` (future apps)
+             └─> Builds & deploys if changed
+```
+
+**Benefits:**
+- **Separation of Concerns**: Infrastructure (DB) vs Application (frontend)
+- **Intelligent Skipping**: Only build what changed
+- **Scalable**: Add apps without configuration overhead
+- **Fast**: Turborepo caching + Vercel edge network
 
 **Other Turborepo commands:**
 ```bash

@@ -72,11 +72,13 @@ src/
 
 ## Deployment
 
-This app is deployed to Vercel with automatic deployments on push to `main`.
+This app is deployed to Vercel with automatic deployments on every push to `main`.
 
 ### Vercel Project Configuration
 
-To deploy this monorepo app to Vercel, configure your Vercel project with these settings:
+This app uses **Vercel's native Turborepo integration** with automatic build skipping. Vercel automatically detects changes to this app or its dependencies and skips unnecessary deployments.
+
+Configure your Vercel project with these settings:
 
 1. **General Settings**:
    - **Framework Preset**: Vite
@@ -84,21 +86,38 @@ To deploy this monorepo app to Vercel, configure your Vercel project with these 
    - **Node Version**: 18.x or higher
 
 2. **Build & Development Settings**:
-   - **Build Command**: `cd ../.. && npm run build --workspace=@jakes-dad/shared && npm run build --workspace=jakesdadwebsite`
+   - **Build Command**: `turbo run build`
    - **Output Directory**: `dist`
-   - **Install Command**: `npm install --legacy-peer-deps`
+   - **Install Command**: (leave default - auto-detected)
 
 3. **Environment Variables**:
    Add these in your Vercel project settings:
    - `VITE_SUPABASE_URL` - Your Supabase project URL
    - `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 
+### How Automatic Build Skipping Works
+
+Vercel uses Turborepo's dependency graph to determine if this app needs rebuilding:
+
+**✅ Triggers Deployment:**
+- Changes to `apps/web/src/**`
+- Changes to `apps/web/package.json`
+- Changes to `packages/shared/**` (dependency)
+- First commit on new branch
+- Environment variable changes
+
+**❌ Skips Deployment:**
+- Changes to other apps (`apps/future-app/**`)
+- Changes to `supabase/**` (handled by GitHub Actions)
+- Changes to documentation only
+- No changes to this app or dependencies
+
 ### How it Works
 
-- Vercel's GitHub integration automatically deploys on every push to `main`
-- The build command ensures the shared package (`@jakes-dad/shared`) builds first
-- Dependencies are installed from the monorepo root to include workspace packages
-- Environment variables are injected at build time
+- **Turborepo**: Handles build orchestration and dependency management
+- **Automatic Filtering**: Vercel adds `--filter=jakesdadwebsite` based on root directory
+- **Smart Caching**: Turborepo caches build outputs for faster deployments
+- **Dependency Tracking**: Automatically rebuilds when `packages/shared` changes
 
 ### Manual Deployment
 
@@ -106,8 +125,7 @@ To deploy manually using Vercel CLI:
 
 ```bash
 # From the monorepo root
-npm run build --workspace=@jakes-dad/shared
-npm run build --workspace=jakesdadwebsite
+turbo run build --filter=jakesdadwebsite
 
 # From apps/web
 cd apps/web
