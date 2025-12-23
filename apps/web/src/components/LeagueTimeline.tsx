@@ -1,4 +1,4 @@
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography, Paper } from "@jakes-dad/shared";
 import {
   Timeline,
   TimelineItem,
@@ -7,7 +7,7 @@ import {
   TimelineContent,
   TimelineDot,
   TimelineOppositeContent,
-} from "@mui/lab";
+} from "@jakes-dad/shared";
 
 interface TimelineEvent {
   year: number;

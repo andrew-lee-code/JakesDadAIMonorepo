@@ -11,8 +11,8 @@ import {
   Button,
   Box,
   IconButton,
-} from "@mui/material";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+} from "@jakes-dad/shared";
+import { ChevronLeft, ChevronRight } from "@jakes-dad/shared";
 import { useState } from "react";
 
 interface ArtifactCardProps {

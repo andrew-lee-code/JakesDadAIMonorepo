@@ -11,17 +11,15 @@ import {
   ListItemText,
   ListItemIcon,
   Box,
-} from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Close as CloseIcon,
-  Home as HomeIcon,
-  Handyman as HandymanIcon,
-  People as PeopleIcon,
-  Description as DescriptionIcon,
-  Museum as MuseumIcon,
-  Analytics as AnalyticsIcon,
-} from "@mui/icons-material";
+  MenuIcon,
+  CloseIcon,
+  HomeIcon,
+  HandymanIcon,
+  PeopleIcon,
+  DescriptionIcon,
+  MuseumIcon,
+  AnalyticsIcon,
+} from "@jakes-dad/shared";
 import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {

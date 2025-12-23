@@ -1,144 +1,112 @@
 # @jakes-dad/shared
 
-Shared package containing MUI theme and Supabase database types for the Jakes Dad monorepo.
+Shared package containing types, theme, and MUI component re-exports for the Jakes Dad monorepo.
 
-## What's Inside
+## Purpose
 
-- **Theme**: Material-UI theme configuration with league-specific colors and typography
-- **Types**: Auto-generated TypeScript types from Supabase database schema
+This package serves as the **single source of truth** for MUI components and theme across all apps in the monorepo. This ensures:
+- Single MUI version across the entire monorepo
+- No version conflicts or duplicate packages
+- Centralized theme and design system
+- Type-safe database schema
 
-## Installation
-
-This package is internal to the monorepo. Add it to your app's dependencies:
-
-```json
-{
-  "dependencies": {
-    "@jakes-dad/shared": "workspace:*"
-  }
-}
-```
-
-## Usage
+## What's Exported
 
 ### Theme
-
-Import and use the MUI theme in your React app:
-
 ```typescript
-import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '@jakes-dad/shared';
-import '@jakes-dad/shared/fonts.css'; // Load custom Jags font
-
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      {/* Your app components */}
-    </ThemeProvider>
-  );
-}
 ```
 
-**Important**: Make sure to import `@jakes-dad/shared/fonts.css` to load the custom "Jags" font used in headings. Without this import, headings will fall back to the "Inter" font.
-
-#### Theme Colors
-
-The theme includes league-specific colors:
-
-- **Primary**: Dark teal (#155263)
-- **Secondary**: Bright blue (#2798b7)
-- **Background**: White (#ffffff) / Light gray (#e6e6e6)
-- **Text**: Darkest teal (#0c2f39) / Dark teal (#155263)
-
-#### Typography
-
-- **Headings**: Custom "Jags" font family
-- **Body**: Inter font family
-- **Font weights**: 400 (regular), 500 (medium)
+The theme is built on MUI v7 with custom colors:
+- Primary: `#155263` (Dark teal)
+- Light: `#2798b7` (Medium teal)
+- Dark: `#0c2f39` (Darkest teal)
 
 ### Database Types
-
-Import Supabase database types for type-safe queries:
-
 ```typescript
-import type { Database } from '@jakes-dad/shared';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient<Database>(url, key);
-
-// Now your queries are fully typed
-const { data, error } = await supabase
-  .from('owners')
-  .select('*');
-// data is typed as Database['public']['Tables']['owners']['Row'][]
+import type { Database } from '@jakes-dad/shared/types';
 ```
 
-#### Available Types
+TypeScript types generated from Supabase schema.
 
-- `Database` - Complete database schema type
-- `Tables` - All table types
-- `Views` - All view types
-- `Functions` - All function types
-- `Enums` - All enum types
+### MUI Components
+All MUI components are re-exported from this package:
+
+```typescript
+import {
+  Box,
+  Typography,
+  Button,
+  ThemeProvider,
+  // ... all MUI components
+} from '@jakes-dad/shared';
+```
+
+**Never import directly from `@mui/*`** - always import from `@jakes-dad/shared` instead.
+
+## Dependencies
+
+### MUI v7
+This package uses MUI v7 which supports:
+- React 17, 18, and 19
+- Modern Material Design 3
+- Improved performance and smaller bundle sizes
+
+### Peer Dependencies
+- `react`: ^18.0.0 || ^19.0.0
+- `react-dom`: ^18.0.0 || ^19.0.0
+
+Apps can use either React 18 or 19 - MUI v7 supports both.
 
 ## Development
 
-### Regenerate Supabase Types
-
-After making database schema changes, regenerate types:
-
+### Build
 ```bash
-cd packages/shared
-npm run types:generate
+npm run build --workspace=@jakes-dad/shared
 ```
 
-This runs `supabase gen types typescript --local` which connects to your local Supabase instance and generates types from the current schema.
-
-**Note**: Make sure your local Supabase is running (`npm run db:start` from repo root).
-
-### Build the Package
-
-Compile TypeScript to JavaScript:
-
+### Generate Database Types
 ```bash
-npm run build
+npm run types:generate --workspace=@jakes-dad/shared
 ```
 
-This creates the `dist/` directory with compiled JS and type declarations.
+## Adding New Components
 
-### Watch Mode
+If you need a MUI component not currently exported:
 
-For development, run TypeScript in watch mode:
+1. Add it to `index.ts`:
+```typescript
+export {
+  // ... existing exports
+  YourNewComponent,
+} from '@mui/material';
+```
 
+2. Rebuild the package:
 ```bash
-npm run dev
+npm run build --workspace=@jakes-dad/shared
 ```
 
-## Package Structure
-
-```
-packages/shared/
-├── dist/              # Compiled output (gitignored)
-├── fonts/             # Custom fonts
-├── index.ts           # Main entry point
-├── theme.ts           # MUI theme configuration
-├── types.ts           # Auto-generated Supabase types
-├── package.json       # Package configuration
-├── tsconfig.json      # TypeScript configuration
-└── README.md          # This file
+3. Use it in your app:
+```typescript
+import { YourNewComponent } from '@jakes-dad/shared';
 ```
 
-## Notes
+## Version Compatibility
 
-- **Theme values**: The theme.ts file contains the source of truth for league colors and typography. Update it there, not in individual apps.
-- **Types are auto-generated**: Never manually edit `types.ts` - it will be overwritten. Always regenerate from Supabase.
-- **Peer dependencies**: This package expects `@mui/material` and `react` to be installed in the consuming app.
+| Package | Version | Note |
+|---------|---------|------|
+| @mui/material | ^7.3.6 | Core MUI components |
+| @mui/system | ^7.3.6 | Styling system |
+| @mui/icons-material | ^7.3.6 | Material icons |
+| @mui/lab | ^7.0.0-beta.17 | Experimental components |
+| React | 18 or 19 | Both supported |
 
-## Scripts
+## Benefits of Re-Export Pattern
 
-| Script | Description |
-|--------|-------------|
-| `npm run build` | Compile TypeScript to JavaScript |
-| `npm run dev` | Run TypeScript compiler in watch mode |
-| `npm run clean` | Remove compiled files |
-| `npm run types:generate` | Regenerate Supabase database types |
+✅ **Single Version**: Only one MUI version installed across monorepo
+✅ **Prevents Conflicts**: Apps can't accidentally install different MUI versions
+✅ **Easy Upgrades**: Update MUI once, all apps get it
+✅ **Type Safety**: Full TypeScript support
+✅ **Smaller Bundles**: No duplicate packages
+✅ **Centralized Theme**: Consistent design across all apps

@@ -12,7 +12,7 @@ import {
   Alert,
   Switch,
   FormControlLabel,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { useOwners } from "../hooks/useRecords";
 import { capitalizeName } from "../utils/stringUtils";

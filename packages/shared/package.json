@@ -32,14 +32,20 @@
     "types:generate": "supabase gen types typescript --local > types.ts",
     "dev": "tsc --watch"
   },
+  "dependencies": {
+    "@mui/material": "^7.3.6",
+    "@mui/system": "^7.3.6",
+    "@mui/icons-material": "^7.3.6",
+    "@mui/lab": "^7.0.0-beta.17"
+  },
   "peerDependencies": {
-    "@mui/material": "^5.0.0",
-    "react": "^18.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/material": "^5.15.0",
     "@types/react": "^18.2.43",
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "typescript": "^5.3.3"
   }
 }

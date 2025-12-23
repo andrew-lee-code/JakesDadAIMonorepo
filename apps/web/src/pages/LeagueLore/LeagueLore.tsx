@@ -1,4 +1,4 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid } from "@jakes-dad/shared";
 import ArtifactCard from "../../components/ArtifactCard";
 import LeagueTimeline from "../../components/LeagueTimeline";
 

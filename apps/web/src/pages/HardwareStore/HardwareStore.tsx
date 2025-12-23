@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from "@jakes-dad/shared";
 import HallOfFame from "../../components/HallOfFame";
 import HardwareGraphs from "../../components/HardwareGraphs";
 

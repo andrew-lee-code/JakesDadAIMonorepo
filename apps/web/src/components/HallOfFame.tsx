@@ -5,7 +5,7 @@ import {
   Alert,
   Box,
   Avatar,
-} from "@mui/material";
+} from "@jakes-dad/shared";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { getOwnerAvatarUrl } from "../utils/imageUtils";
 
