@@ -9,6 +9,7 @@ import {
   Alert,
   Switch,
   FormControlLabel,
+  Stack,
 } from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
@@ -18,8 +19,8 @@ import { MODERN_ERA_YEARS } from "../constants/years";
 
 interface CategoryResult {
   category: string;
-  goats: Array<{ owner_name: string; value: number; displayValue: string }>;
-  woats: Array<{ owner_name: string; value: number; displayValue: string }>;
+  goats: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }>;
+  woats: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }>;
 }
 
 interface TotalPointsBySeason {
@@ -191,63 +192,104 @@ const GoatsAndWoats: React.FC = () => {
     };
   });
 
-  // Function to find GOATS and WOATS for a category
+  // Function to find top 3 ranked GOATS and bottom 3 ranked WOATS for a category (with tie handling)
   const findGoatsAndWoats = (
     category: string,
     getValue: (stats: any) => number,
     formatValue: (value: number) => string
   ): CategoryResult => {
-    const values = ownerStats.map((stats) => getValue(stats));
-    const maxValue = Math.max(...values);
-    const minValue = Math.min(...values);
-
-    const goats = ownerStats
-      .filter((stats) => getValue(stats) === maxValue)
+    // Sort all owners by value (descending)
+    const sortedOwners = ownerStats
       .map((stats) => ({
         owner_name: stats.owner_name,
         value: getValue(stats),
         displayValue: formatValue(getValue(stats)),
-      }));
+      }))
+      .sort((a, b) => b.value - a.value);
 
-    const woats = ownerStats
-      .filter((stats) => getValue(stats) === minValue)
-      .map((stats) => ({
-        owner_name: stats.owner_name,
-        value: getValue(stats),
-        displayValue: formatValue(getValue(stats)),
-      }));
+    // Assign ranks to GOATs (top performers) - handles ties
+    const goatsWithRanks: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }> = [];
+    let displayRank: 1 | 2 | 3 = 1;
 
-    return { category, goats, woats };
+    for (let i = 0; i < sortedOwners.length && displayRank <= 3; i++) {
+      const owner = sortedOwners[i];
+
+      // If this is a new value, update the display rank to current position + 1
+      if (i > 0 && owner.value !== sortedOwners[i - 1].value) {
+        displayRank = (i + 1) as 1 | 2 | 3;
+        if (displayRank > 3) break;
+      }
+
+      goatsWithRanks.push({ ...owner, rank: displayRank });
+    }
+
+    // Assign ranks to WOATs (bottom performers) - handles ties
+    const woatsWithRanks: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }> = [];
+    displayRank = 1;
+
+    for (let i = sortedOwners.length - 1; i >= 0 && displayRank <= 3; i--) {
+      const owner = sortedOwners[i];
+
+      // If this is a new value, update the display rank
+      if (i < sortedOwners.length - 1 && owner.value !== sortedOwners[i + 1].value) {
+        displayRank = (sortedOwners.length - i) as 1 | 2 | 3;
+        if (displayRank > 3) break;
+      }
+
+      woatsWithRanks.unshift({ ...owner, rank: displayRank });
+    }
+
+    return { category, goats: goatsWithRanks, woats: woatsWithRanks };
   };
 
-  // Special function for points against where higher = GOAT, lower = WOAT
+  // Special function for points against where higher = GOAT (worst defense), lower = WOAT (best defense)
   const findGoatsAndWoatsReversed = (
     category: string,
     getValue: (stats: any) => number,
     formatValue: (value: number) => string
   ): CategoryResult => {
-    const values = ownerStats.map((stats) => getValue(stats));
-    const maxValue = Math.max(...values);
-    const minValue = Math.min(...values);
-
-    // Reversed: higher values are GOATS, lower values are WOATS
-    const goats = ownerStats
-      .filter((stats) => getValue(stats) === maxValue)
+    // Sort all owners by value (descending)
+    const sortedOwners = ownerStats
       .map((stats) => ({
         owner_name: stats.owner_name,
         value: getValue(stats),
         displayValue: formatValue(getValue(stats)),
-      }));
+      }))
+      .sort((a, b) => b.value - a.value);
 
-    const woats = ownerStats
-      .filter((stats) => getValue(stats) === minValue)
-      .map((stats) => ({
-        owner_name: stats.owner_name,
-        value: getValue(stats),
-        displayValue: formatValue(getValue(stats)),
-      }));
+    // Assign ranks to GOATs (top = worst defense = highest points against) - handles ties
+    const goatsWithRanks: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }> = [];
+    let displayRank: 1 | 2 | 3 = 1;
 
-    return { category, goats, woats };
+    for (let i = 0; i < sortedOwners.length && displayRank <= 3; i++) {
+      const owner = sortedOwners[i];
+
+      // If this is a new value, update the display rank to current position + 1
+      if (i > 0 && owner.value !== sortedOwners[i - 1].value) {
+        displayRank = (i + 1) as 1 | 2 | 3;
+        if (displayRank > 3) break;
+      }
+
+      goatsWithRanks.push({ ...owner, rank: displayRank });
+    }
+
+    // Assign ranks to WOATs (bottom = best defense = lowest points against) - handles ties
+    const woatsWithRanks: Array<{ owner_name: string; value: number; displayValue: string; rank: 1 | 2 | 3 }> = [];
+    displayRank = 1;
+
+    for (let i = sortedOwners.length - 1; i >= 0 && displayRank <= 3; i--) {
+      const owner = sortedOwners[i];
+
+      // If this is a new value, update the display rank
+      if (i < sortedOwners.length - 1 && owner.value !== sortedOwners[i + 1].value) {
+        displayRank = (sortedOwners.length - i) as 1 | 2 | 3;
+        if (displayRank > 3) break;
+      }
+
+      woatsWithRanks.unshift({ ...owner, rank: displayRank });
+    }
+
+    return { category, goats: goatsWithRanks, woats: woatsWithRanks };
   };
 
   // Calculate categories
@@ -288,58 +330,6 @@ const GoatsAndWoats: React.FC = () => {
       (value) => `${value.toFixed(1)} avg pts against`
     ),
   ];
-
-  const OwnerChip: React.FC<{
-    ownerName: string;
-    displayValue: string;
-    isGoat: boolean;
-  }> = ({ ownerName, displayValue, isGoat }) => (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        backgroundColor: isGoat ? "gold" : "#ff6b6b",
-        color: isGoat ? "#000" : "#fff",
-        borderRadius: "16px",
-        padding: { xs: "6px 8px", sm: "10px 16px" },
-        minWidth: { xs: "100px", sm: "180px" },
-        maxWidth: { xs: "100%", sm: "none" },
-        width: { xs: "100%", sm: "auto" },
-        gap: { xs: 1, sm: 1.5 },
-      }}
-    >
-      <Avatar
-        src={getOwnerAvatarUrl(ownerName)}
-        sx={{ width: { xs: 28, sm: 32 }, height: { xs: 28, sm: 32 } }}
-      />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-        }}
-      >
-        <Typography
-          sx={{
-            fontWeight: "bold",
-            fontSize: { xs: "0.7rem", sm: "0.9rem" },
-            lineHeight: 1.2,
-          }}
-        >
-          {ownerName}
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: "0.6rem", sm: "0.75rem" },
-            opacity: 0.9,
-            lineHeight: 1.1,
-          }}
-        >
-          {displayValue}
-        </Typography>
-      </Box>
-    </Box>
-  );
 
   return (
     <Box sx={{ width: "100%", mb: 6, mx: 0 }}>
@@ -439,14 +429,14 @@ const GoatsAndWoats: React.FC = () => {
                     {category.category}
                   </Typography>
 
-                  {/* GOATS */}
-                  <Box sx={{ mb: 3 }}>
+                  {/* GOATS Box */}
+                  <Box sx={{ mb: 2 }}>
                     <Typography
                       variant="subtitle2"
                       sx={{
                         mb: 1,
                         fontWeight: 600,
-                        color: "#DAA520",
+                        color: "#155263",
                         textAlign: "center",
                       }}
                     >
@@ -454,31 +444,106 @@ const GoatsAndWoats: React.FC = () => {
                     </Typography>
                     <Box
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        alignItems: "center",
+                        backgroundColor: "#155263",
+                        borderRadius: "12px",
+                        padding: { xs: "10px", sm: "14px" },
                       }}
                     >
-                      {category.goats.map((goat) => (
-                        <OwnerChip
-                          key={goat.owner_name}
-                          ownerName={goat.owner_name}
-                          displayValue={goat.displayValue}
-                          isGoat={true}
-                        />
-                      ))}
+                      <Stack direction="column" spacing={{ xs: 1, sm: 1.25 }}>
+                        {[1, 2, 3].map((rank) => {
+                          const goatsForRank = category.goats.filter(g => g.rank === rank);
+                          if (goatsForRank.length === 0) return null;
+
+                          const rankText = rank === 1 ? "1st Place" : rank === 2 ? "2nd Place" : "3rd Place";
+                          const isFirstPlace = rank === 1;
+
+                          return (
+                            <Box
+                              key={rank}
+                              sx={{
+                                backgroundColor: "rgba(255,255,255,0.1)",
+                                border: isFirstPlace ? "2px solid #FFD700" : "1px solid rgba(255,255,255,0.2)",
+                                borderRadius: "10px",
+                                padding: { xs: "8px", sm: "10px" },
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                                  fontWeight: 700,
+                                  color: isFirstPlace ? "#FFD700" : "#fff",
+                                  mb: 0.5,
+                                  textAlign: "center",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                }}
+                              >
+                                {rankText}
+                                {goatsForRank.length > 1 && (
+                                  <span style={{ opacity: 0.8, fontStyle: "italic", fontWeight: 400, marginLeft: "4px" }}>
+                                    ({goatsForRank.length}-way tie)
+                                  </span>
+                                )}
+                              </Typography>
+                              <Stack direction="column" spacing={0.5}>
+                                {goatsForRank.map(goat => (
+                                  <Box
+                                    key={goat.owner_name}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: { xs: 1, sm: 1.5 },
+                                      padding: { xs: "4px", sm: "6px" },
+                                    }}
+                                  >
+                                    <Avatar
+                                      src={getOwnerAvatarUrl(goat.owner_name)}
+                                      sx={{
+                                        width: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
+                                        height: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
+                                      }}
+                                    />
+                                    <Box sx={{ flex: 1, color: "#fff" }}>
+                                      <Typography
+                                        sx={{
+                                          fontWeight: isFirstPlace ? 600 : 500,
+                                          fontSize: {
+                                            xs: isFirstPlace ? "0.875rem" : "0.75rem",
+                                            sm: isFirstPlace ? "1rem" : "0.875rem",
+                                          },
+                                          lineHeight: 1.2,
+                                        }}
+                                      >
+                                        {goat.owner_name}
+                                      </Typography>
+                                      <Typography
+                                        sx={{
+                                          fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                                          opacity: 0.9,
+                                          lineHeight: 1.1,
+                                        }}
+                                      >
+                                        {goat.displayValue}
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                ))}
+                              </Stack>
+                            </Box>
+                          );
+                        })}
+                      </Stack>
                     </Box>
                   </Box>
 
-                  {/* WOATS */}
+                  {/* WOATS Box */}
                   <Box>
                     <Typography
                       variant="subtitle2"
                       sx={{
                         mb: 1,
                         fontWeight: 600,
-                        color: "#ff6b6b",
+                        color: "#666",
                         textAlign: "center",
                       }}
                     >
@@ -486,20 +551,96 @@ const GoatsAndWoats: React.FC = () => {
                     </Typography>
                     <Box
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        alignItems: "center",
+                        backgroundColor: "#fff",
+                        border: "1px solid #e0e0e0",
+                        borderRadius: "12px",
+                        padding: { xs: "10px", sm: "14px" },
                       }}
                     >
-                      {category.woats.map((woat) => (
-                        <OwnerChip
-                          key={woat.owner_name}
-                          ownerName={woat.owner_name}
-                          displayValue={woat.displayValue}
-                          isGoat={false}
-                        />
-                      ))}
+                      <Stack direction="column" spacing={{ xs: 1, sm: 1.25 }}>
+                        {[1, 2, 3].map((rank) => {
+                          const woatsForRank = category.woats.filter(w => w.rank === rank);
+                          if (woatsForRank.length === 0) return null;
+
+                          const rankText = rank === 1 ? "1st Place" : rank === 2 ? "2nd Place" : "3rd Place";
+                          const isFirstPlace = rank === 1;
+
+                          return (
+                            <Box
+                              key={rank}
+                              sx={{
+                                backgroundColor: "#f5f5f5",
+                                border: isFirstPlace ? "2px solid #FFD700" : "1px solid #e0e0e0",
+                                borderRadius: "10px",
+                                padding: { xs: "8px", sm: "10px" },
+                              }}
+                            >
+                              <Typography
+                                sx={{
+                                  fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                                  fontWeight: 700,
+                                  color: isFirstPlace ? "#155263" : "#666",
+                                  mb: 0.5,
+                                  textAlign: "center",
+                                  textTransform: "uppercase",
+                                  letterSpacing: "0.5px",
+                                }}
+                              >
+                                {rankText}
+                                {woatsForRank.length > 1 && (
+                                  <span style={{ opacity: 0.8, fontStyle: "italic", fontWeight: 400, marginLeft: "4px" }}>
+                                    ({woatsForRank.length}-way tie)
+                                  </span>
+                                )}
+                              </Typography>
+                              <Stack direction="column" spacing={0.5}>
+                                {woatsForRank.map(woat => (
+                                  <Box
+                                    key={woat.owner_name}
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: { xs: 1, sm: 1.5 },
+                                      padding: { xs: "4px", sm: "6px" },
+                                    }}
+                                  >
+                                    <Avatar
+                                      src={getOwnerAvatarUrl(woat.owner_name)}
+                                      sx={{
+                                        width: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
+                                        height: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
+                                      }}
+                                    />
+                                    <Box sx={{ flex: 1, color: "#000" }}>
+                                      <Typography
+                                        sx={{
+                                          fontWeight: isFirstPlace ? 600 : 500,
+                                          fontSize: {
+                                            xs: isFirstPlace ? "0.875rem" : "0.75rem",
+                                            sm: isFirstPlace ? "1rem" : "0.875rem",
+                                          },
+                                          lineHeight: 1.2,
+                                        }}
+                                      >
+                                        {woat.owner_name}
+                                      </Typography>
+                                      <Typography
+                                        sx={{
+                                          fontSize: { xs: "0.7rem", sm: "0.8rem" },
+                                          opacity: 0.9,
+                                          lineHeight: 1.1,
+                                        }}
+                                      >
+                                        {woat.displayValue}
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                ))}
+                              </Stack>
+                            </Box>
+                          );
+                        })}
+                      </Stack>
                     </Box>
                   </Box>
                 </CardContent>
