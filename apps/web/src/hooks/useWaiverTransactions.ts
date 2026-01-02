@@ -65,8 +65,7 @@ export function useWaiverTransactions(year: number = 2025) {
     }
 
     // Step 1: Get owners active for this year
-    // Since the data only goes up to 2024, we'll use 2024 as the current year
-    const currentYear = year === 2025 ? 2024 : year;
+    const currentYear = 2025
 
     let activeOwners = owners.filter(
       (owner) => owner.years_active && owner.years_active.includes(currentYear)

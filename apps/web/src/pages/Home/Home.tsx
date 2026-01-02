@@ -1,4 +1,11 @@
-import { Box, Typography, Avatar, Paper, Chip, Button } from "@jakes-dad/shared";
+import {
+  Box,
+  Typography,
+  Avatar,
+  Paper,
+  Chip,
+  Button,
+} from "@jakes-dad/shared";
 import { Link } from "react-router-dom";
 import { useCurrentChampions } from "../../hooks/useCurrentChampions";
 
@@ -104,7 +111,7 @@ const Home = () => {
             }}
           >
             <Chip
-              label="2024 CHAMPION"
+              label="2025 CHAMPION"
               sx={{
                 backgroundColor: "#DAA520",
                 color: "#ffffff",
@@ -167,7 +174,7 @@ const Home = () => {
             }}
           >
             <Chip
-              label="2024 ULTIMATE LOSER"
+              label="2025 ULTIMATE LOSER"
               sx={{
                 backgroundColor: "#DC143C",
                 color: "#ffffff",

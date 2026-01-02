@@ -37,7 +37,7 @@ export function useCurrentChampions() {
     isLoading: hardwareLoading,
     error: hardwareError,
   } = useSupabaseQuery<HardwareBySeason>("hardware_by_season", {
-    filters: [{ column: "year", operator: "eq", value: 2024 }],
+    filters: [{ column: "year", operator: "eq", value: 2025 }],
   });
 
   const {
@@ -51,7 +51,7 @@ export function useCurrentChampions() {
       return { champion: null, ultimateLoser: null };
     }
 
-    const currentYearData = hardwareData[0]; // Should only be one record for 2024
+    const currentYearData = hardwareData[0]; // Should only be one record for 2025
     console.log(currentYearData);
 
     // Find champion
