@@ -1,32 +1,17 @@
+---
+name: feature-flow
+description: Complete AI workflow for new features requiring plan, architecture, design, implementation, and review phases. Use when building new features with UI components or when a structured approach with quality gates is needed.
+---
+
 # Feature Flow Skill
 
-**Usage**: `/feature-flow [feature description]`
+Automates the full feature development lifecycle with quality gates at each phase.
 
-**Purpose**: Complete AI workflow for new features (Plan → Architect/Design → Build → Review → PR)
-
-## What This Skill Does
-
-Automates the full feature development lifecycle:
-
-1. **Plan**: Create feature specification (using EnterPlanMode if complex)
-2. **Architect**: Design technical implementation
-3. **Design**: Create UI/UX mockup in `apps/mockups/`
-4. **Build**: Implement with tests
-5. **Review**: Test and create professional PR
-
-## When to Use
-
-- New features requiring full workflow
-- Features with UI components
-- When you want structured approach with quality gates
-
-**Don't use for**: Bug fixes (use `/quick-fix`), small tweaks, exploration
-
-## Workflow Steps
+## Workflow Phases
 
 ### Phase 1: Planning
 
-Read [.claude/agents/plan.md](.claude/agents/plan.md) and create:
+Read [.claude/agents/plan.md](../../agents/plan.md) and create:
 
 - Feature specification
 - Requirements
@@ -37,14 +22,14 @@ Read [.claude/agents/plan.md](.claude/agents/plan.md) and create:
 
 ### Phase 2: Solutioning (Parallel)
 
-**Architect** (read [.claude/agents/architect.md](.claude/agents/architect.md)):
+**Architect** (read [.claude/agents/architect.md](../../agents/architect.md)):
 
 - Technical approach
 - Data model changes
 - API design
 - Implementation steps
 
-**Designer** (read [.claude/agents/design.md](.claude/agents/design.md)):
+**Designer** (read [.claude/agents/design.md](../../agents/design.md)):
 
 - UI mockup in `apps/mockups/src/screens/`
 - User flow
@@ -54,7 +39,7 @@ Read [.claude/agents/plan.md](.claude/agents/plan.md) and create:
 
 ### Phase 3: Implementation
 
-Read [.claude/agents/build.md](.claude/agents/build.md) and implement:
+Read [.claude/agents/build.md](../../agents/build.md) and implement:
 
 - Database migrations (if needed)
 - Edge functions (if needed)
@@ -74,19 +59,28 @@ npm run dev  # Manual test
 
 ### Phase 4: Review & PR
 
-Read [.claude/agents/review.md](.claude/agents/review.md) and:
+Read [.claude/agents/review.md](../../agents/review.md) and:
 
 1. Review code quality
 2. Test functionality (mobile + desktop)
 3. Verify accessibility
 4. Create professional PR
 
-## Example Usage
+## When to Use
+
+- New features requiring full workflow
+- Features with UI components
+- When you want structured approach with quality gates
+
+**Don't use for**: Bug fixes (quick-fix skill handles those), small tweaks, exploration
+
+## Example
 
 ```
-User: /feature-flow player comparison feature
+User: I need a player comparison feature
 
-Claude:
+Claude: I'll use the feature-flow skill to build this with the full workflow.
+
 Phase 1: Planning
 [Creates specification following plan.md format]
 [Waits for approval]
@@ -95,8 +89,8 @@ User: Approved
 
 Claude:
 Phase 2: Solutioning
-[Architect agent creates technical design]
-[Design agent creates mockup in apps/mockups/]
+[Architect creates technical design]
+[Designer creates mockup in apps/mockups/]
 [Waits for approval]
 
 User: Approved, but use caching for performance

@@ -2,13 +2,19 @@
 
 A monorepo for the Jakes Dad fantasy football league, featuring agent-centric development with AI workflow.
 
+**Quick Start**: See [CLAUDE.md](./CLAUDE.md) for project overview, tech stack, design system, and development workflow.
+
 ## Project Structure
 
 ```
 JakesDadAIMonorepo/
 ├── apps/
-│   ├── web/              # React web application
+│   ├── web/              # React web application (production)
+│   ├── mockups/          # UI/UX design iteration environment
 │   └── mcp-server/       # MCP server with domain knowledge
+├── packages/
+│   ├── shared/           # Shared types and utilities
+│   └── database/         # Supabase schema and migrations
 ├── supabase/             # Backend infrastructure (managed as code)
 │   ├── functions/        # Edge Functions
 │   ├── migrations/       # Database migrations
@@ -16,9 +22,11 @@ JakesDadAIMonorepo/
 │   └── config.toml       # Supabase config
 ├── scripts/              # Local utility scripts
 ├── .claude/              # Claude Code configuration
-│   ├── commands/         # Slash commands for AI agents
-│   ├── mcp.json          # MCP server configuration
-│   └── AI_WORKFLOW.md  # Agent-centric workflow guide
+│   ├── agents/           # Specialized workflow agents
+│   ├── skills/           # Automated workflows (feature-flow, pr-review, quick-fix)
+│   ├── resources/        # Design system, tech standards, domain knowledge
+│   └── AI_WORKFLOW.md    # Agent-centric workflow guide
+├── CLAUDE.md             # Project overview and quick reference
 └── package.json          # Monorepo root configuration
 ```
 
@@ -26,11 +34,19 @@ JakesDadAIMonorepo/
 
 ### Web App ([apps/web/](apps/web/))
 
-React-based web application for the fantasy football league.
+React-based web application for the fantasy football league (production).
 
 - **Tech Stack**: React, TypeScript, Vite, Supabase
 - **Features**: League dashboard, team management, player statistics
 - **Run**: `turbo run dev --filter=@jakes-dad/web`
+
+### Mockups App ([apps/mockups/](apps/mockups/))
+
+UI/UX design iteration environment (not deployed to production).
+
+- **Tech Stack**: React, TypeScript, Vite
+- **Purpose**: Test design ideas before implementing in production app
+- **Run**: `turbo run dev --filter=mockups`
 
 ### MCP Server ([apps/mcp-server/](apps/mcp-server/))
 
@@ -409,15 +425,28 @@ turbo run build --concurrency=2
 
 ## AI Workflow
 
-This project follows a **Build, Measure, Analyze, Decide** workflow with agent-centric development. See [.claude/AI_WORKFLOW.md](.claude/AI_WORKFLOW.md) for details.
+This project uses **AI-driven development** with specialized agents and automated skills. See [CLAUDE.md](./CLAUDE.md) for quick reference and [.claude/AI_WORKFLOW.md](.claude/AI_WORKFLOW.md) for detailed workflow.
 
-### Working with AI Agents
+### Automated Skills
 
-Use Claude Code slash commands:
+Claude automatically uses these skills based on your request:
 
-- `/overview` - Project structure overview
-- `/setup` - Environment setup help
-- `/supabase` - Database schema assistance
+- **feature-flow**: Complete workflow (plan → architect/design → build → review → PR) for new features
+- **pr-review**: Automated code review and professional PR creation
+- **quick-fix**: Fast iteration for bug fixes and minor features
+
+Just describe what you need naturally - Claude chooses the appropriate skill automatically.
+
+### Specialized Agents
+
+For phase-specific work, agents are available in `.claude/agents/`:
+
+- **plan** - Create PRDs and specifications
+- **architect** - Design technical architecture
+- **design** - Create UI/UX mockups in apps/mockups
+- **build** - Implement features with tests
+- **review** - Code review and PR creation
+- **debug** - Systematic bug investigation
 
 ### MCP Server Integration
 

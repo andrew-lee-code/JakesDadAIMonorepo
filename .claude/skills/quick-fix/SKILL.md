@@ -1,31 +1,11 @@
+---
+name: quick-fix
+description: Fast iteration for bug fixes and minor features without full workflow. Use for bug fixes, small UI tweaks, minor features, refactoring, or documentation updates where the solution is straightforward.
+---
+
 # Quick Fix Skill
 
-**Usage**: `/quick-fix [bug description or small feature]`
-
-**Purpose**: Fast iteration for bug fixes and minor features without full AI workflow
-
-## What This Skill Does
-
-Streamlined workflow for quick iterations:
-
-1. Understand the issue/request
-2. Implement fix or small feature
-3. Add/update tests
-4. Verify it works
-5. Commit with clear message
-
-**Skips**: Planning phase, design mockups, formal architecture, separate review phase
-
-## When to Use
-
-- Bug fixes
-- Small UI tweaks
-- Minor feature additions
-- Refactoring
-- Documentation updates
-- You already know what to build
-
-**Don't use for**: New features with UI, architectural changes, unclear requirements
+Streamlined workflow for quick iterations without planning, design, or formal review phases.
 
 ## Workflow
 
@@ -45,7 +25,7 @@ For **small features**:
 
 ### 2. Implement
 
-Read [.claude/agents/build.md](.claude/agents/build.md) for standards:
+Read [.claude/agents/build.md](../../agents/build.md) for standards:
 
 - Make minimal, focused changes
 - Follow existing patterns
@@ -87,14 +67,26 @@ git commit -m "fix: [clear description]
 - `docs:` - Documentation
 - `style:` - UI tweaks
 
-## Example Usage
+## When to Use
+
+- Bug fixes
+- Small UI tweaks
+- Minor feature additions
+- Refactoring
+- Documentation updates
+- You already know what to build
+
+**Don't use for**: New features with UI, architectural changes, unclear requirements
+
+## Examples
 
 ### Bug Fix
 
 ```
-User: /quick-fix scoring calculation is wrong for week 12
+User: The scoring calculation is wrong for week 12
 
-Claude:
+Claude: I'll use the quick-fix skill to investigate and fix this bug.
+
 Investigating scoring bug for week 12...
 
 Found issue: Decimal rounding in calculateScore()
@@ -115,9 +107,10 @@ Committing fix:
 ### Small Feature
 
 ```
-User: /quick-fix add sorting to standings table
+User: Add sorting to the standings table
 
-Claude:
+Claude: I'll use the quick-fix skill to add this feature.
+
 Adding sorting to standings table...
 
 Changes:
@@ -151,9 +144,9 @@ Committing:
 
 **When to upgrade to full flow**:
 
-- If fix requires architecture changes → use `/feature-flow`
-- If unclear what to build → use `/feature-flow`
-- If requires new UI design → use `/feature-flow`
+- If fix requires architecture changes → use feature-flow skill
+- If unclear what to build → use feature-flow skill
+- If requires new UI design → use feature-flow skill
 
 ## Speed vs Quality
 
