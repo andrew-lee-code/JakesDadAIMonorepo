@@ -1,28 +1,23 @@
+---
+name: pr-review
+description: Review implemented code and create professional pull request. Use when code review is needed or when creating a PR for completed work that needs quality verification.
+---
+
 # PR Review Skill
 
-**Usage**: `/pr-review [feature description]`
+Automated code review and PR creation with comprehensive quality checks.
 
-**Purpose**: Review implemented code and create professional pull request
+## Review Process
 
-## What This Skill Does
+Read [.claude/agents/review.md](../../agents/review.md) and perform:
 
-Automated code review and PR creation:
-
-1. Review code quality against standards
-2. Test functionality (manual + automated)
-3. Verify design compliance and accessibility
-4. Check security and performance
-5. Create professional PR with comprehensive documentation
-
-## When to Use
-
-- After feature implementation is complete
-- When you want thorough review before merging
-- To ensure production quality standards
+1. Code quality review against standards
+2. Functionality testing (manual + automated)
+3. Design compliance and accessibility verification
+4. Security and performance checks
+5. Professional PR creation with comprehensive documentation
 
 ## Review Checklist
-
-Read [.claude/agents/review.md](.claude/agents/review.md) and verify:
 
 ### Code Quality
 ```bash
@@ -93,12 +88,19 @@ EOF
 )"
 ```
 
-## Example Usage
+## When to Use
+
+- After feature implementation is complete
+- When you want thorough review before merging
+- To ensure production quality standards
+
+## Example
 
 ```
-User: /pr-review player comparison feature
+User: Please review the player comparison feature and create a PR
 
-Claude:
+Claude: I'll use the pr-review skill to thoroughly review and create a professional PR.
+
 Running code review for player comparison feature...
 
 ✅ Code Quality
