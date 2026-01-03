@@ -7,6 +7,7 @@
 3. **Database Querying**: Use the Supabase sdk in apps to query the database
 4. **Edge-First**: Use Supabase Edge Functions for server-side logic
 5. **Mobile-First**: Responsive design for all screen sizes
+6. **Logical Organization of Code**: Code with different responsibilities should be organized accordingly (queries in a queries/ directory, utils in a utils/ directory, etc.)
 
 ## Code Standards
 
@@ -57,3 +58,5 @@
 ## Frameworks
 
 - Follow SOLID coding principles
+- Always minimize duplicate code
+- Don't hardcode values that will be used repeatedly
