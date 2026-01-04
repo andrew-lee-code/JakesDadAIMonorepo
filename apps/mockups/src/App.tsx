@@ -5,6 +5,7 @@ import { Box, Typography, Button, Paper } from "@jakes-dad/shared";
 import { HomeRedesign } from "./screens/HomeRedesign";
 import { HardwareStoreRedesign } from "./screens/HardwareStoreRedesign";
 import { MembersRedesign } from "./screens/MembersRedesign";
+import { LeagueLoreRedesign } from "./screens/LeagueLoreRedesign";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -23,6 +24,11 @@ const MockupIndex = () => {
       name: "Members Redesign",
       path: "/members-redesign",
       description: "Card-based layout with visual rankings and win rate indicators",
+    },
+    {
+      name: "League Lore Redesign",
+      path: "/league-lore-redesign",
+      description: "Categorized artifacts with hero section and improved card design",
     },
   ];
 
@@ -127,6 +133,7 @@ const App = () => {
       <Route path="/home-redesign" element={<HomeRedesign />} />
       <Route path="/hardware-store-redesign" element={<HardwareStoreRedesign />} />
       <Route path="/members-redesign" element={<MembersRedesign />} />
+      <Route path="/league-lore-redesign" element={<LeagueLoreRedesign />} />
     </Routes>
   );
 };
