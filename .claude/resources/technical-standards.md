@@ -13,11 +13,48 @@
 
 ### TypeScript/React
 
+**Component Structure:**
 - Use functional components with hooks
 - Prefer composition over inheritance
 - Keep components small and focused (<200 lines)
 - Use TypeScript strict mode
 - Follow React best practices (memo, useCallback when needed)
+
+**TypeScript Best Practices:**
+- ✅ Remove unused variables and parameters
+  ```tsx
+  // ❌ WRONG - index is declared but never used
+  {items.map((item, index) => <Card key={item.id}>...</Card>)}
+
+  // ✅ CORRECT - remove unused index
+  {items.map((item) => <Card key={item.id}>...</Card>)}
+  ```
+- ✅ Use proper types for props (define interfaces)
+- ✅ Avoid `any` type - use specific types or `unknown`
+- ✅ Check for null/undefined before accessing properties
+- ✅ Run `npm run build` frequently to catch errors early
+
+**Common Build Errors to Avoid:**
+1. **Unused parameters**: TypeScript strict mode flags unused variables
+   - Check all `.map()`, `.forEach()`, `.filter()` callbacks
+   - Remove parameters you don't use (especially `index`)
+
+2. **Type mismatches**: Ensure component props match interfaces
+   - Pass required props to child components
+   - Use optional chaining (`?.`) for optional properties
+
+3. **Missing imports**: Import all components and utilities used
+   - Don't rely on auto-imports without verification
+
+4. **Incorrect JSX nesting**: Ensure proper opening/closing tags
+   - Run build to catch JSX syntax errors early
+
+**Before Committing Code:**
+- [ ] Run `npm run build` to verify TypeScript compilation
+- [ ] Check for unused variables (ESLint warnings)
+- [ ] Verify all imports are used
+- [ ] Test on mobile breakpoints (xs, md, lg)
+- [ ] Check color contrast for accessibility
 
 ### Python
 

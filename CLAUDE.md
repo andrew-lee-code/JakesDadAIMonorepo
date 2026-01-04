@@ -95,6 +95,9 @@ npm run test && npm run build  # Verify before commit
 - Keep components <200 lines
 - Strict TypeScript (no `any`)
 - Prefer composition over inheritance
+- **CRITICAL**: Remove unused parameters (e.g., `index` in `.map((item, index) =>` if not used)
+- **CRITICAL**: Run `npm run build` before committing to catch TypeScript errors
+- **CRITICAL**: Check for proper color contrast (#c5901c for charts, not #daa520)
 
 **Database**:
 

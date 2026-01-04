@@ -125,6 +125,38 @@
 - ❌ Don't use low-contrast color combinations
 - ❌ Don't use teal and gold together without sufficient separation
 
+### Color Contrast Requirements - CRITICAL
+
+**Bar Charts & Data Visualization:**
+ALWAYS use darker shades for better contrast:
+```css
+/* ✅ CORRECT - Dark shades for charts */
+--chart-gold: #c5901c;        /* Dark gold for bars */
+--chart-red: #b91c1c;          /* Dark red for bars */
+
+/* ❌ WRONG - Too light for visibility */
+--chart-gold: #daa520;         /* Too light! */
+--chart-red: #dc143c;          /* Too light! */
+```
+
+**Text on White Backgrounds:**
+```css
+/* ✅ CORRECT - Standard shades work on white */
+--text-gold: #daa520;          /* Winner/champion text */
+--text-red: #dc143c;           /* Loser text */
+--text-teal: #155263;          /* Headers, labels */
+```
+
+**Testing Contrast:**
+Before finalizing designs:
+1. Test all text/background combinations at [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+2. Minimum WCAG AA: 4.5:1 for normal text, 3:1 for large text
+3. When in doubt, use darker shades
+
+**Reference Examples:**
+- Hardware Store bar charts: `apps/web/src/components/HardwareGraphs.tsx` (lines 150-162)
+- Home page navigation cards: `apps/web/src/pages/Home/Home.tsx` (lines 542-927)
+
 ---
 
 ## 3. Typography System
@@ -891,7 +923,179 @@
 
 ---
 
-## 11. Component Checklist
+## 11. Proven Layout Patterns
+
+> **Reference**: See `apps/web/src/pages/Home/Home.tsx` and `apps/web/src/pages/HardwareStore/HardwareStore.tsx` for production examples.
+
+### Hero Section Pattern
+
+**Use Case**: Page headers, main titles
+**Example**: Home page (lines 78-164), Hardware Store (lines 43-62)
+
+```tsx
+<Box sx={{
+  background: "linear-gradient(135deg, #155263 0%, #2798b7 100%)",
+  px: { xs: 3, md: 6 },
+  py: { xs: 4, md: 5 },
+  textAlign: "center",
+}}>
+  <Typography variant="h2" sx={{
+    color: "#fff",
+    fontWeight: 700,
+    fontSize: { xs: "28px", md: "40px" },
+    mb: 1,
+  }}>
+    Page Title
+  </Typography>
+</Box>
+```
+
+### Card Grid Pattern
+
+**Use Case**: Navigation, feature showcase
+**Example**: Home navigation cards (lines 529-927)
+
+```tsx
+<Box sx={{
+  display: "grid",
+  gridTemplateColumns: {
+    xs: "1fr",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(3, 1fr)",
+  },
+  gap: { xs: 3, sm: 3, md: 4 },
+}}>
+  <Paper elevation={0} sx={{
+    p: { xs: 3, sm: 4 },
+    background: "rgba(255,255,255,0.95)",
+    borderRadius: 3,
+    border: "2px solid rgba(21, 82, 99, 0.1)",
+    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+    "&:hover": {
+      transform: "translateY(-6px)",
+      boxShadow: "0 16px 40px rgba(21, 82, 99, 0.25)",
+    },
+  }}>
+    {/* Card content */}
+  </Paper>
+</Box>
+```
+
+### Year-by-Year Timeline Pattern
+
+**Use Case**: Historical data, chronological lists
+**Example**: Hardware Store year cards (lines 157-491)
+
+```tsx
+<Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+  {data.map((item) => (
+    <Card key={item.id} sx={{
+      borderRadius: 2,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      border: "1px solid #e0e0e0",
+      transition: "all 0.2s ease",
+      "&:hover": {
+        boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+        transform: "translateY(-2px)",
+      },
+    }}>
+      <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+        <Box sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "flex-start", md: "center" },
+          gap: 3,
+        }}>
+          {/* Year badge, avatars, content */}
+        </Box>
+      </CardContent>
+    </Card>
+  ))}
+</Box>
+```
+
+### Two-Column Data Pattern
+
+**Use Case**: Winners vs Losers, comparisons
+**Example**: Hardware Store graphs (lines 93-234)
+
+```tsx
+<Box sx={{
+  display: "grid",
+  gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
+  gap: 3,
+}}>
+  <Box>{/* Left column - Winners */}</Box>
+  <Box>{/* Right column - Losers */}</Box>
+</Box>
+```
+
+### Avatar + Name Pattern
+
+**Use Case**: User profiles, team members
+**Example**: Hardware Store cards (lines 249-300), Home champion (lines 233-275)
+
+```tsx
+<Box sx={{
+  display: "flex",
+  alignItems: "center",
+  gap: 1.5,
+}}>
+  <Box component="img"
+    src={avatarUrl}
+    sx={{
+      width: 60,  // Minimum 60px for profile cards
+      height: 60,
+      borderRadius: "50%",
+      objectFit: "cover",
+      border: "3px solid #daa520",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    }}
+  />
+  <Box>
+    <Typography variant="caption" sx={{
+      color: "#666",
+      fontSize: "11px",
+      textTransform: "uppercase",
+      letterSpacing: "0.5px",
+      whiteSpace: "nowrap",
+    }}>
+      Label
+    </Typography>
+    <Typography variant="body1" sx={{
+      fontWeight: 600,
+      color: "#daa520",
+      fontSize: "15px",
+      whiteSpace: "nowrap",
+    }}>
+      Name
+    </Typography>
+  </Box>
+</Box>
+```
+
+### Design Iteration Rules
+
+**First Draft Guidelines:**
+1. Keep it SIMPLE - don't overcomplicate
+2. Use proven patterns from Home/Hardware Store pages
+3. Check color contrast immediately (use dark shades for charts)
+4. Include avatars from the start (60px minimum)
+5. Add hover states (transform + box-shadow)
+6. Mobile-first responsive grid
+
+**Common Mistakes to Avoid:**
+- ❌ Using too-light colors (#daa520, #dc143c for charts)
+- ❌ Forgetting avatars in profile/team layouts
+- ❌ Making avatars too small (<60px on cards)
+- ❌ Overcomplicating layouts with too many sections
+- ❌ Forgetting regular season data (champs AND losers)
+- ❌ Missing hover effects on interactive elements
+- ❌ Not testing on mobile breakpoints
+
+---
+
+## 12. Component Checklist
 
 When designing a new component, ensure:
 
