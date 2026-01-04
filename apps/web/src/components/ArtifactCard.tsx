@@ -11,6 +11,7 @@ import {
   Button,
   Box,
   IconButton,
+  Chip,
 } from "@jakes-dad/shared";
 import { ChevronLeft, ChevronRight } from "@jakes-dad/shared";
 import { useState } from "react";
@@ -19,15 +20,11 @@ interface ArtifactCardProps {
   title: string;
   description: string;
   imageUrl?: string;
-  imageUrls?: string[]; // Array of images for carousel
+  imageUrls?: string[];
   link?: string;
-  backgroundColor?: string;
-  gradientColors?: {
-    start: string;
-    end: string;
-  };
-  type?: "image" | "link" | "modal";
+  type?: "link" | "modal";
   modalContent?: string;
+  year: number;
 }
 
 const ArtifactCard = ({
@@ -36,118 +33,141 @@ const ArtifactCard = ({
   imageUrl,
   imageUrls,
   link,
-  backgroundColor = "#155263",
-  gradientColors = { start: "#155263", end: "#2798b7" },
-  type = "link",
+  type = "modal",
   modalContent,
+  year,
 }: ArtifactCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Use imageUrls if provided, otherwise fallback to single imageUrl
   const images =
     imageUrls && imageUrls.length > 0 ? imageUrls : imageUrl ? [imageUrl] : [];
   const displayImage = images.length > 0 ? images[0] : undefined;
+  const hasMultipleImages = images.length > 1;
 
   const handleCardClick = () => {
-    if (type === "modal") {
-      // For modals, open the modal dialog
-      setModalOpen(true);
-      setCurrentImageIndex(0); // Reset to first image when opening modal
-    } else if (link) {
-      // For links, open in new tab
+    if (type === "link" && link) {
       window.open(link, "_blank", "noopener,noreferrer");
+    } else {
+      setModalOpen(true);
+      setCurrentImageIndex(0);
     }
   };
 
-  const handlePrevImage = () => {
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
-  const handleNextImage = () => {
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
-  const renderMedia = () => {
-    if (displayImage) {
-      return (
-        <img
-          src={displayImage}
-          alt={title}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-          }}
-        />
-      );
-    }
-    return null;
-  };
-
   return (
-    <Card
-      elevation={0}
-      sx={{
-        width: "100%",
-        backgroundColor: "#ffffff",
-        borderRadius: 4,
-        boxShadow: "0 8px 32px rgba(21, 82, 99, 0.15)",
-        border: "1px solid #e6e6e6",
-        transition: "all 0.3s ease",
-        "&:hover": {
-          boxShadow: "0 12px 40px rgba(21, 82, 99, 0.25)",
-          transform: "translateY(-4px)",
-        },
-      }}
-    >
-      <CardActionArea onClick={handleCardClick}>
-        <CardMedia
-          component="div"
-          sx={{
-            height: 200,
-            backgroundColor: displayImage ? "transparent" : backgroundColor,
-            background: displayImage
-              ? "none"
-              : `linear-gradient(135deg, ${gradientColors.start} 0%, ${gradientColors.end} 100%)`,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            overflow: "hidden",
-          }}
-        >
-          {renderMedia()}
-        </CardMedia>
-        <CardContent
-          sx={{
-            p: 4,
-            textAlign: "center",
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="h3"
-            gutterBottom
-            sx={{
-              fontWeight: 700,
-              color: "#155263",
-              mb: 2,
-            }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#666",
-              fontSize: "1.1rem",
-              lineHeight: 1.6,
-            }}
-          >
-            {description}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+    <>
+      <Card
+        elevation={0}
+        sx={{
+          height: "100%",
+          backgroundColor: "#ffffff",
+          borderRadius: 3,
+          border: "2px solid #e0e0e0",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-4px)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+            borderColor: "#155263",
+          },
+        }}
+      >
+        <CardActionArea onClick={handleCardClick} sx={{ height: "100%" }}>
+          <Box sx={{ position: "relative" }}>
+            <CardMedia
+              component="div"
+              sx={{
+                height: 180,
+                backgroundColor: displayImage ? "transparent" : "#155263",
+                backgroundImage: displayImage ? `url(${displayImage})` : "none",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+            {/* Year chip */}
+            <Chip
+              label={year}
+              size="small"
+              sx={{
+                position: "absolute",
+                top: 12,
+                left: 12,
+                backgroundColor: "#155263",
+                color: "#fff",
+                fontSize: "12px",
+                fontWeight: 700,
+                height: 26,
+              }}
+            />
+            {/* Photo count indicator */}
+            {hasMultipleImages && (
+              <Chip
+                label={`${images.length} photos`}
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 12,
+                  right: 12,
+                  backgroundColor: "rgba(0,0,0,0.6)",
+                  color: "#fff",
+                  fontSize: "11px",
+                  height: 24,
+                }}
+              />
+            )}
+            {/* External link indicator */}
+            {type === "link" && (
+              <Chip
+                label="External link"
+                size="small"
+                sx={{
+                  position: "absolute",
+                  top: 12,
+                  right: 12,
+                  backgroundColor: "rgba(0,0,0,0.6)",
+                  color: "#fff",
+                  fontSize: "11px",
+                  height: 24,
+                }}
+              />
+            )}
+          </Box>
+          <CardContent sx={{ p: 2.5 }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                color: "#155263",
+                fontSize: "16px",
+                mb: 0.5,
+                lineHeight: 1.3,
+              }}
+            >
+              {title}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#666",
+                fontSize: "13px",
+                lineHeight: 1.4,
+              }}
+            >
+              {description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
 
       {/* Modal Dialog */}
       <Dialog
@@ -171,6 +191,17 @@ const ArtifactCard = ({
           }}
         >
           {title}
+          <Typography
+            component="span"
+            sx={{
+              ml: 2,
+              fontSize: "14px",
+              color: "#666",
+              fontWeight: 400,
+            }}
+          >
+            {year}
+          </Typography>
         </DialogTitle>
         <DialogContent>
           {/* Image Carousel */}
@@ -237,70 +268,68 @@ const ArtifactCard = ({
 
               {/* Image indicators - only show if more than one image */}
               {images.length > 1 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 1,
-                    mt: 2,
-                  }}
-                >
-                  {images.map((_, index) => (
-                    <Box
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      sx={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        backgroundColor:
-                          index === currentImageIndex ? "#155263" : "#ccc",
-                        cursor: "pointer",
-                        transition: "background-color 0.3s ease",
-                        "&:hover": {
+                <>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: 1,
+                      mt: 2,
+                    }}
+                  >
+                    {images.map((_, index) => (
+                      <Box
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
                           backgroundColor:
-                            index === currentImageIndex ? "#155263" : "#999",
-                        },
-                      }}
-                    />
-                  ))}
-                </Box>
-              )}
+                            index === currentImageIndex ? "#155263" : "#ccc",
+                          cursor: "pointer",
+                          transition: "background-color 0.3s ease",
+                          "&:hover": {
+                            backgroundColor:
+                              index === currentImageIndex ? "#155263" : "#999",
+                          },
+                        }}
+                      />
+                    ))}
+                  </Box>
 
-              {/* Image counter */}
-              {images.length > 1 && (
-                <Typography
-                  variant="caption"
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
-                    color: "white",
-                    px: 1,
-                    py: 0.5,
-                    borderRadius: 1,
-                  }}
-                >
-                  {currentImageIndex + 1} / {images.length}
-                </Typography>
+                  {/* Image counter */}
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      textAlign: "center",
+                      mt: 1,
+                      color: "#666",
+                    }}
+                  >
+                    {currentImageIndex + 1} / {images.length}
+                  </Typography>
+                </>
               )}
             </Box>
           )}
 
           {/* Text content */}
-          <Typography
-            variant="body1"
-            sx={{
-              color: "#333",
-              fontSize: "1.1rem",
-              lineHeight: 1.6,
-              textAlign: "center",
-              fontStyle: "italic",
-            }}
-          >
-            {modalContent}
-          </Typography>
+          {modalContent && (
+            <Typography
+              variant="body1"
+              sx={{
+                color: "#333",
+                fontSize: "1.1rem",
+                lineHeight: 1.6,
+                textAlign: "center",
+                fontStyle: "italic",
+              }}
+            >
+              {modalContent}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions sx={{ justifyContent: "center", pt: 2 }}>
           <Button
@@ -319,7 +348,7 @@ const ArtifactCard = ({
           </Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </>
   );
 };
 
