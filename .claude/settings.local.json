@@ -14,7 +14,14 @@
       "Bash(git checkout:*)",
       "Bash(wc:*)",
       "Bash(for file in /Users/andrewlee/Repositories/JakesDadAIMonorepo/.claude/**/*.md)",
-      "Bash(done)"
+      "Bash(done)",
+      "WebSearch",
+      "Bash(find:*)",
+      "Bash(gh pr list:*)",
+      "WebFetch(domain:playwright.dev)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright install chromium)",
+      "Bash(npx playwright test:*)"
     ]
   }
 }

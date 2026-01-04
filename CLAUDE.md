@@ -41,7 +41,8 @@ npm run db:types               # Generate TypeScript types
 
 # Testing & Quality
 npm run test                   # Run all tests
-npm run test:coverage          # Coverage report
+npm run test:e2e               # Run E2E tests (Playwright)
+npm run test:e2e:critical      # Run critical flow E2E tests only
 npm run lint                   # Lint all packages
 npm run build                  # Production build
 
@@ -55,7 +56,7 @@ npm run test && npm run build  # Verify before commit
 
 **Frontend**: React 18, TypeScript, Vite, TanStack Query, Tailwind CSS
 **Backend**: Supabase (PostgreSQL, Edge Functions, Auth, RLS)
-**Testing**: Vitest, React Testing Library
+**Testing**: Playwright (E2E), Page Object Model
 **Deployment**: Vercel (web), Supabase (backend)
 
 ## Design System Quick Reference
@@ -108,10 +109,11 @@ npm run test && npm run build  # Verify before commit
 
 **Testing**:
 
-- Unit tests for business logic
-- Integration tests for API endpoints
-- Minimum 70% coverage
-- Test happy path + edge cases
+- E2E tests with Playwright (critical flows must pass before PR)
+- Page Object Model for maintainable tests
+- Critical flow tests in `apps/web/e2e/tests/critical-flows/`
+- Add feature tests in `apps/web/e2e/tests/features/`
+- Test happy path + edge cases + mobile viewport
 
 **Security**:
 
@@ -141,7 +143,7 @@ npm run test && npm run build  # Verify before commit
 ### Skills (automated workflows)
 
 - `/feature-flow` - Complete AI workflow (plan → design → build → review)
-- `/pr-review` - Automated code review and PR creation
+- `/pr-review` - Code review, E2E testing, user approval, then PR creation
 - `/quick-fix` - Fast bug fixes and minor features
 
 ## Domain Context
@@ -158,7 +160,8 @@ npm run test && npm run build  # Verify before commit
 **For new features**: Use full AI workflow (plan → architect/design → build → review)
 **For bug fixes**: Use quick-fix or debug agent directly
 **For exploration**: Let Claude naturally explore and ask questions
-**For quality**: Always run tests and build before committing
+**For quality**: Always run E2E tests and build before creating PR
+**Before PR**: E2E tests must pass, then ask for user approval for manual testing
 
 ## Pro Tips
 

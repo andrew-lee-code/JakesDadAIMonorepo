@@ -5,26 +5,46 @@ description: Review implemented code and create professional pull request. Use w
 
 # PR Review Skill
 
-Code review and PR creation with quality checks.
+Code review, E2E testing, user approval, and PR creation.
 
 ## Review Process
 
 Read [review.md](../../agents/review.md) and verify:
 
-### Quality Checks
+### 1. Quality Checks
 ```bash
 npm run lint && npm run test && npm run build
-npm run test:coverage  # ≥70%
 ```
 
-### Checklist
+### 2. E2E Testing (REQUIRED)
+```bash
+# Critical flow tests MUST pass before PR
+npm run test:e2e:critical
+```
+
+If tests fail, fix issues and re-run until all pass.
+
+### 3. Code Review Checklist
 - [ ] TypeScript strict (no `any`), components <200 lines
 - [ ] Happy path + edge cases work (mobile + desktop)
 - [ ] Design tokens used, touch targets ≥44px, keyboard nav works
 - [ ] Input validated, no secrets, RLS policies applied
 - [ ] Bundle <500KB, queries optimized
 
-## PR Creation
+## User Approval Gate (REQUIRED)
+
+**Before creating PR:**
+
+1. Display E2E test results
+2. Summarize all changes made
+3. Ask user for approval using AskUserQuestion:
+   - "Create PR now"
+   - "Manual testing first" (wait for user to test locally)
+   - "Review specific areas"
+
+4. **WAIT** for explicit user approval - do NOT create PR automatically
+
+## PR Creation (After Approval)
 
 ```bash
 gh pr create --title "feat: [Feature]" --body "$(cat <<'EOF'
@@ -36,8 +56,9 @@ gh pr create --title "feat: [Feature]" --body "$(cat <<'EOF'
 - Change 2
 
 ## Testing
+- [x] E2E critical flow tests pass
 - [x] Manual testing (mobile + desktop)
-- [x] Tests pass, build successful
+- [x] Unit tests pass, build successful
 - [x] Accessibility verified
 
 🤖 Generated with Claude Code
