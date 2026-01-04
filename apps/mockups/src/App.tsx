@@ -4,6 +4,7 @@ import { Box, Typography, Button, Paper } from "@jakes-dad/shared";
 // Import screens here as they are created
 import { HomeRedesign } from "./screens/HomeRedesign";
 import { HardwareStoreRedesign } from "./screens/HardwareStoreRedesign";
+import { MembersRedesign } from "./screens/MembersRedesign";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -17,6 +18,11 @@ const MockupIndex = () => {
       name: "Hardware Store Redesign",
       path: "/hardware-store-redesign",
       description: "Enhanced UX for the Hardware Hall of Fame with trophy vibes",
+    },
+    {
+      name: "Members Redesign",
+      path: "/members-redesign",
+      description: "Card-based layout with visual rankings and win rate indicators",
     },
   ];
 
@@ -120,6 +126,7 @@ const App = () => {
       <Route path="/" element={<MockupIndex />} />
       <Route path="/home-redesign" element={<HomeRedesign />} />
       <Route path="/hardware-store-redesign" element={<HardwareStoreRedesign />} />
+      <Route path="/members-redesign" element={<MembersRedesign />} />
     </Routes>
   );
 };

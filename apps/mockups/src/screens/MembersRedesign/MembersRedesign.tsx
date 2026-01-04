@@ -1,33 +1,36 @@
 import {
   Box,
   Typography,
-  Paper,
   Avatar,
-  CircularProgress,
-  Alert,
+  Paper,
   Switch,
   FormControlLabel,
 } from "@jakes-dad/shared";
-import { useState, useMemo } from "react";
-import { useMemberStats } from "../../hooks/useRecords";
+import { useState } from "react";
 
-const Members = () => {
+// Mock data representing the MemberStats interface
+const mockMemberStats = [
+  { owner_id: 1, name: "Jake", totalWins: 98, totalLosses: 72, winPercentage: "57.65%", hardware: 3, avatar: "/images/owner_pictures/jake.webp" },
+  { owner_id: 2, name: "Andrew", totalWins: 95, totalLosses: 75, winPercentage: "55.88%", hardware: 2, avatar: "/images/owner_pictures/andrew.webp" },
+  { owner_id: 3, name: "Craig", totalWins: 89, totalLosses: 81, winPercentage: "52.35%", hardware: 1, avatar: "/images/owner_pictures/craig.webp" },
+  { owner_id: 4, name: "Taylor", totalWins: 85, totalLosses: 85, winPercentage: "50.00%", hardware: 1, avatar: "/images/owner_pictures/taylor.webp" },
+  { owner_id: 5, name: "Dylan", totalWins: 82, totalLosses: 88, winPercentage: "48.24%", hardware: 1, avatar: "/images/owner_pictures/dylan.webp" },
+  { owner_id: 6, name: "Derek", totalWins: 80, totalLosses: 90, winPercentage: "47.06%", hardware: 0, avatar: "/images/owner_pictures/derek.webp" },
+  { owner_id: 7, name: "Kevin", totalWins: 78, totalLosses: 92, winPercentage: "45.88%", hardware: 1, avatar: "/images/owner_pictures/kevin.webp" },
+  { owner_id: 8, name: "Dan", totalWins: 75, totalLosses: 95, winPercentage: "44.12%", hardware: 0, avatar: "/images/owner_pictures/dan.webp" },
+  { owner_id: 9, name: "Mario", totalWins: 72, totalLosses: 98, winPercentage: "42.35%", hardware: 0, avatar: "/images/owner_pictures/mario.webp" },
+  { owner_id: 10, name: "Wes", totalWins: 70, totalLosses: 100, winPercentage: "41.18%", hardware: 0, avatar: "/images/owner_pictures/wes.webp" },
+];
+
+const MembersRedesign = () => {
   const [modernEraOnly, setModernEraOnly] = useState(true);
-  const { data: memberStats, isLoading, error } = useMemberStats(modernEraOnly);
 
   // Calculate min/max from actual data for dynamic color range
-  const { minPct, maxPct } = useMemo(() => {
-    if (!memberStats || memberStats.length === 0) {
-      return { minPct: 0, maxPct: 100 };
-    }
-    const percentages = memberStats.map((m) =>
-      parseFloat(m.winPercentage.replace("%", ""))
-    );
-    return {
-      minPct: Math.min(...percentages),
-      maxPct: Math.max(...percentages),
-    };
-  }, [memberStats]);
+  const winPercentages = mockMemberStats.map((m) =>
+    parseFloat(m.winPercentage.replace("%", ""))
+  );
+  const minPct = Math.min(...winPercentages);
+  const maxPct = Math.max(...winPercentages);
 
   // Smooth gradient mapped to actual data range
   // Lowest win % = dark red, highest = deep green, middle = yellow
@@ -35,13 +38,12 @@ const Members = () => {
     const percent = parseFloat(percentage.replace("%", ""));
 
     // Normalize to 0-1 based on actual data range
-    const normalized =
-      maxPct === minPct ? 0.5 : (percent - minPct) / (maxPct - minPct);
+    const normalized = maxPct === minPct ? 0.5 : (percent - minPct) / (maxPct - minPct);
 
     // Define color stops
-    const darkRed = { r: 139, g: 0, b: 0 }; // #8B0000 at min
-    const yellow = { r: 218, g: 165, b: 32 }; // #DAA520 at midpoint
-    const deepGreen = { r: 13, g: 107, b: 13 }; // #0D6B0D at max
+    const darkRed = { r: 139, g: 0, b: 0 };      // #8B0000 at min
+    const yellow = { r: 218, g: 165, b: 32 };    // #DAA520 at midpoint
+    const deepGreen = { r: 13, g: 107, b: 13 };  // #0D6B0D at max
 
     let r: number, g: number, b: number;
 
@@ -61,60 +63,6 @@ const Members = () => {
 
     return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
   };
-
-  if (isLoading) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box display="flex" alignItems="center" gap={2}>
-          <CircularProgress sx={{ color: "#155263" }} />
-          <Typography variant="body1" sx={{ color: "#155263" }}>
-            Loading member data...
-          </Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-          p: 4,
-        }}
-      >
-        <Alert severity="error">
-          Error loading member data: {error?.message}
-        </Alert>
-      </Box>
-    );
-  }
-
-  if (!memberStats || memberStats.length === 0) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "100vh",
-          backgroundColor: "#f5f5f5",
-          p: 4,
-        }}
-      >
-        <Alert severity="info">No member data found.</Alert>
-      </Box>
-    );
-  }
 
   return (
     <Box
@@ -217,18 +165,6 @@ const Members = () => {
             }
           />
         </Box>
-        <Box sx={{ textAlign: "center", mt: 2, pb: 4 }}>
-          <Typography
-            sx={{
-              color: "#666",
-              fontSize: "14px",
-              fontStyle: "italic",
-            }}
-          >
-            Stats from{" "}
-            {modernEraOnly ? "Modern Era (2016+)" : "All Eras (2012+)"}
-          </Typography>
-        </Box>
 
         {/* Member Cards Grid */}
         <Box
@@ -242,7 +178,7 @@ const Members = () => {
             gap: 3,
           }}
         >
-          {memberStats.map((member) => {
+          {mockMemberStats.map((member) => {
             const winPctColor = getWinPercentageColor(member.winPercentage);
 
             return (
@@ -256,6 +192,7 @@ const Members = () => {
                   backgroundColor: "#ffffff",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
                   transition: "all 0.3s ease",
+                  cursor: "pointer",
                   "&:hover": {
                     transform: "translateY(-4px)",
                     boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
@@ -389,9 +326,22 @@ const Members = () => {
             );
           })}
         </Box>
+
+        {/* Footer Note */}
+        <Box sx={{ textAlign: "center", mt: 6, pb: 4 }}>
+          <Typography
+            sx={{
+              color: "#666",
+              fontSize: "14px",
+              fontStyle: "italic",
+            }}
+          >
+            Stats from {modernEraOnly ? "Modern Era (2020+)" : "All Time (2012+)"}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export default Members;
+export default MembersRedesign;
