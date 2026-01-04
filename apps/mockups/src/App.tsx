@@ -3,6 +3,7 @@ import { Box, Typography, Button, Paper } from "@jakes-dad/shared";
 
 // Import screens here as they are created
 import { HomeRedesign } from "./screens/HomeRedesign";
+import { HardwareStoreRedesign } from "./screens/HardwareStoreRedesign";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -11,6 +12,11 @@ const MockupIndex = () => {
       name: "Home Screen Redesign",
       path: "/home-redesign",
       description: "Redesigned home screen with more personality and less 'AI slop'",
+    },
+    {
+      name: "Hardware Store Redesign",
+      path: "/hardware-store-redesign",
+      description: "Enhanced UX for the Hardware Hall of Fame with trophy vibes",
     },
   ];
 
@@ -113,6 +119,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<MockupIndex />} />
       <Route path="/home-redesign" element={<HomeRedesign />} />
+      <Route path="/hardware-store-redesign" element={<HardwareStoreRedesign />} />
     </Routes>
   );
 };

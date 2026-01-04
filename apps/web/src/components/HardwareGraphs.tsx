@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -11,8 +10,6 @@ import {
 import {
   Box,
   Typography,
-  Switch,
-  FormControlLabel,
   CircularProgress,
   Alert,
 } from "@jakes-dad/shared";
@@ -22,8 +19,11 @@ import {
 } from "../hooks/useHardwareByOwner";
 import { MODERN_ERA_YEARS, ALL_YEARS } from "../constants/years";
 
-const HardwareGraphs = () => {
-  const [modernEraOnly, setModernEraOnly] = useState(true);
+interface HardwareGraphsProps {
+  modernEraOnly: boolean;
+}
+
+const HardwareGraphs = ({ modernEraOnly }: HardwareGraphsProps) => {
 
   // Get filtered data based on toggle
   const {
@@ -93,53 +93,14 @@ const HardwareGraphs = () => {
   return (
     <Box
       sx={{
-        p: { xs: 2, sm: 3 },
+        display: "grid",
+        gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
+        gap: 3,
         width: "100%",
         maxWidth: "100%",
         overflow: "hidden",
-        boxSizing: "border-box",
       }}
     >
-      <Box sx={{ mb: 3, display: "flex", justifyContent: "center" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={modernEraOnly}
-              onChange={(e) => setModernEraOnly(e.target.checked)}
-              sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: "#2798b7",
-                },
-                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: "#2798b7",
-                },
-              }}
-            />
-          }
-          label={
-            <Typography
-              variant="body1"
-              sx={{
-                fontWeight: 500,
-                color: "#155263",
-              }}
-            >
-              Modern Era Only
-            </Typography>
-          }
-        />
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", lg: "row" },
-          gap: { xs: 4, lg: 6 },
-          width: "100%",
-          maxWidth: "100%",
-          overflow: "hidden",
-        }}
-      >
         {/* Hardware Leaders Chart */}
         <Box sx={{ flex: 1, minWidth: 0, maxWidth: "100%" }}>
           <Typography
@@ -189,15 +150,15 @@ const HardwareGraphs = () => {
                 />
                 <Bar
                   dataKey="Playoff Champ"
-                  fill="#B8860B"
+                  fill="#c5901c"
                   name="Champ"
-                  radius={[2, 2, 0, 0]}
+                  radius={[4, 4, 0, 0]}
                 />
                 <Bar
                   dataKey="Reg Szn Champ"
-                  fill="#DAA520"
+                  fill="#daa520"
                   name="Reg Szn Champ"
-                  radius={[2, 2, 0, 0]}
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -258,19 +219,18 @@ const HardwareGraphs = () => {
                 />
                 <Bar
                   dataKey="A_Ultimate_Loser"
-                  fill="#8B0000"
-                  radius={[2, 2, 0, 0]}
+                  fill="#b91c1c"
+                  radius={[4, 4, 0, 0]}
                 />
                 <Bar
                   dataKey="B_Reg_Szn_Loser"
-                  fill="#DC143C"
-                  radius={[2, 2, 0, 0]}
+                  fill="#dc143c"
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
           </Box>
         </Box>
-      </Box>
     </Box>
   );
 };

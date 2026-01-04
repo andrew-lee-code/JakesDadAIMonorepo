@@ -39,6 +39,24 @@ export function useLosersByOwner() {
   });
 }
 
+export function useHardwareBySeason(years?: number[]) {
+  const query = useSupabaseQuery<HardwareBySeason>("hardware_by_season", {
+    orderBy: { column: "year", ascending: false },
+  });
+
+  const filteredData = useMemo(() => {
+    if (!years || !query.data) {
+      return query.data || [];
+    }
+    return query.data.filter((season) => years.includes(season.year));
+  }, [years, query.data]);
+
+  return {
+    ...query,
+    data: filteredData,
+  };
+}
+
 export function useHardwareByOwnerFiltered(years?: number[]) {
   // Always call both hooks to avoid conditional hook calls
   const allDataQuery = useHardwareByOwner();
