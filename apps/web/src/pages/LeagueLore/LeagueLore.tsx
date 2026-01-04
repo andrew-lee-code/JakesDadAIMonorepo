@@ -62,7 +62,7 @@ const LeagueLore = () => {
       imageUrl: "https://i.ytimg.com/vi/nPrw45262Pc/mqdefault.jpg",
       type: "modal",
       modalContent:
-        '"I\'m not doing this again next year. I said it last year but I swear if we ever use this dumbass boring way to decide draft order again and I start at a disadvantage like I do every year I\'m not playing fantasy again. This is the last fucking time we do this"',
+        "\"I'm not doing this again next year. I said it last year but I swear if we ever use this dumbass boring way to decide draft order again and I start at a disadvantage like I do every year I'm not playing fantasy again. This is the last fucking time we do this\"",
       year: 2019,
     },
     {
@@ -213,19 +213,6 @@ const LeagueLore = () => {
               year={artifact.year}
             />
           ))}
-        </Box>
-
-        {/* Footer */}
-        <Box sx={{ textAlign: "center", py: 4 }}>
-          <Typography
-            sx={{
-              color: "#666",
-              fontSize: "14px",
-              fontStyle: "italic",
-            }}
-          >
-            Those who forget the past are doomed to repeat the same dumb trades
-          </Typography>
         </Box>
       </Box>
     </Box>
