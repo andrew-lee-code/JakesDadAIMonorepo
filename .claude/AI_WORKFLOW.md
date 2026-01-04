@@ -147,7 +147,7 @@ Systematic debugging, root cause analysis, diagnosis (not implementation).
 - Use `/quick-fix` for simple tasks (skips planning/design phases)
 - Use skills for automation (fewer manual steps)
 - CLAUDE.md is auto-loaded (don't repeat project context)
-- Design tokens file is condensed (940 → 300 lines)
+- Resource files are condensed - agents reference existing code, not duplicate it
 
 **Speed optimization**:
 
