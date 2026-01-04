@@ -266,3 +266,179 @@ export const homeRedesignData = {
     "Dalton seen studying waiver wire tutorials at 2am",
   ],
 };
+
+// Hardware Store Mock Data
+export const hardwareStoreData = {
+  champions: [
+    {
+      owner_name: "Andrew",
+      num_playoff_championships: 3,
+      num_reg_szn_championships: 4,
+      total_hardware: 7,
+    },
+    {
+      owner_name: "Craig",
+      num_playoff_championships: 2,
+      num_reg_szn_championships: 2,
+      total_hardware: 4,
+    },
+    {
+      owner_name: "Zach",
+      num_playoff_championships: 2,
+      num_reg_szn_championships: 1,
+      total_hardware: 3,
+    },
+    {
+      owner_name: "Ben",
+      num_playoff_championships: 1,
+      num_reg_szn_championships: 2,
+      total_hardware: 3,
+    },
+    {
+      owner_name: "Taylor",
+      num_playoff_championships: 1,
+      num_reg_szn_championships: 1,
+      total_hardware: 2,
+    },
+    {
+      owner_name: "Jake",
+      num_playoff_championships: 0,
+      num_reg_szn_championships: 1,
+      total_hardware: 1,
+    },
+    {
+      owner_name: "Nick",
+      num_playoff_championships: 0,
+      num_reg_szn_championships: 0,
+      total_hardware: 0,
+    },
+    {
+      owner_name: "Matt",
+      num_playoff_championships: 0,
+      num_reg_szn_championships: 0,
+      total_hardware: 0,
+    },
+  ],
+
+  losers: [
+    {
+      owner_name: "Jake",
+      num_ultimate_losers: 3,
+      num_reg_szn_losers: 2,
+      total_shame: 5,
+    },
+    {
+      owner_name: "Taylor",
+      num_ultimate_losers: 2,
+      num_reg_szn_losers: 2,
+      total_shame: 4,
+    },
+    {
+      owner_name: "Nick",
+      num_ultimate_losers: 1,
+      num_reg_szn_losers: 2,
+      total_shame: 3,
+    },
+    {
+      owner_name: "Matt",
+      num_ultimate_losers: 1,
+      num_reg_szn_losers: 1,
+      total_shame: 2,
+    },
+    {
+      owner_name: "Ben",
+      num_ultimate_losers: 1,
+      num_reg_szn_losers: 0,
+      total_shame: 1,
+    },
+  ],
+
+  stats: {
+    totalChampionships: 9,
+    totalRegSeasonTitles: 11,
+    mostDominantOwner: "Andrew",
+    mostShameCount: 5,
+    mostShamefulOwner: "Jake",
+  },
+
+  roastQuotes: {
+    champions: [
+      "Where legends are forged and egos inflated",
+      "These sacred halls honor only the worthy",
+      "Glory, immortalized in bar charts",
+    ],
+    losers: [
+      "The Wall of Shame™ - Preserving mediocrity since 2015",
+      "Not all heroes wear capes. Some wear participation trophies.",
+      "Excellence in failure, consistency in defeat",
+    ],
+  },
+
+  // Year-by-year Hall of Fame
+  yearByYear: [
+    {
+      year: 2025,
+      champion: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      loser: { name: "Jake", teamName: "Jake's Jokes", avatar: "/images/owner_pictures/jake.webp" },
+      regularSeasonChamp: { name: "Craig", teamName: "Sxy Bane", avatar: "/images/owner_pictures/craig.webp" },
+      regularSeasonLoser: { name: "Nick", teamName: "Nick's Nightmares", avatar: "/images/owner_pictures/nick.webp" },
+    },
+    {
+      year: 2024,
+      champion: { name: "Craig", teamName: "Sxy Bane", avatar: "/images/owner_pictures/craig.webp" },
+      loser: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      regularSeasonChamp: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      regularSeasonLoser: { name: "Matt", teamName: "Matt's Mayhem", avatar: "/images/owner_pictures/matt.webp" },
+    },
+    {
+      year: 2023,
+      champion: { name: "Zach", teamName: "Zach Attack", avatar: "/images/owner_pictures/zach.webp" },
+      loser: { name: "Nick", teamName: "Nick's Nightmares", avatar: "/images/owner_pictures/nick.webp" },
+      regularSeasonChamp: { name: "Zach", teamName: "Zach Attack", avatar: "/images/owner_pictures/zach.webp" },
+      regularSeasonLoser: { name: "Jake", teamName: "Jake's Jokes", avatar: "/images/owner_pictures/jake.webp" },
+    },
+    {
+      year: 2022,
+      champion: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      loser: { name: "Jake", teamName: "Jake's Jokes", avatar: "/images/owner_pictures/jake.webp" },
+      regularSeasonChamp: { name: "Ben", teamName: "Ben's Beasts", avatar: "/images/owner_pictures/ben.webp" },
+      regularSeasonLoser: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+    },
+    {
+      year: 2021,
+      champion: { name: "Zach", teamName: "Zach Attack", avatar: "/images/owner_pictures/zach.webp" },
+      loser: { name: "Matt", teamName: "Matt's Mayhem", avatar: "/images/owner_pictures/matt.webp" },
+      regularSeasonChamp: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      regularSeasonLoser: { name: "Nick", teamName: "Nick's Nightmares", avatar: "/images/owner_pictures/nick.webp" },
+    },
+    {
+      year: 2020,
+      champion: { name: "Ben", teamName: "Ben's Beasts", avatar: "/images/owner_pictures/ben.webp" },
+      loser: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      regularSeasonChamp: { name: "Craig", teamName: "Sxy Bane", avatar: "/images/owner_pictures/craig.webp" },
+      regularSeasonLoser: { name: "Jake", teamName: "Jake's Jokes", avatar: "/images/owner_pictures/jake.webp" },
+    },
+    {
+      year: 2019,
+      champion: { name: "Craig", teamName: "Sxy Bane", avatar: "/images/owner_pictures/craig.webp" },
+      loser: { name: "Jake", teamName: "Jake's Jokes", avatar: "/images/owner_pictures/jake.webp" },
+      regularSeasonChamp: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      regularSeasonLoser: { name: "Matt", teamName: "Matt's Mayhem", avatar: "/images/owner_pictures/matt.webp" },
+    },
+    {
+      year: 2018,
+      champion: { name: "Andrew", teamName: "Andrew's Avengers", avatar: "/images/owner_pictures/andrew.webp" },
+      loser: { name: "Ben", teamName: "Ben's Beasts", avatar: "/images/owner_pictures/ben.webp" },
+      regularSeasonChamp: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      regularSeasonLoser: { name: "Nick", teamName: "Nick's Nightmares", avatar: "/images/owner_pictures/nick.webp" },
+    },
+    {
+      year: 2017,
+      champion: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      loser: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      regularSeasonChamp: { name: "Ben", teamName: "Ben's Beasts", avatar: "/images/owner_pictures/ben.webp" },
+      regularSeasonLoser: { name: "Taylor", teamName: "Taylor's Tears", avatar: "/images/owner_pictures/taylor.webp" },
+      note: "Taylor won the championship, regular season, AND both toilet bowls somehow",
+    },
+  ],
+};
