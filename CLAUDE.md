@@ -85,7 +85,7 @@ npm run test && npm run build  # Verify before commit
 - Forms: Inputs, selects, checkboxes with validation states
 - Tables: Sortable headers, hover states, striped rows
 
-📖 **Full design system**: See [.claude/resources/design-tokens.md](.claude/resources/design-tokens.md)
+📖 **Full design system**: See [.claude/resources/design-system.md](.claude/resources/design-system.md)
 
 ## Code Standards
 
@@ -164,6 +164,6 @@ npm run test && npm run build  # Verify before commit
 
 - Design mockups go in `apps/mockups/` (runnable React app, not deployed)
 - Database schema is auto-generated - see `packages/shared/types.ts`
-- Use design tokens consistently (see resources/design-tokens.md)
+- Use design tokens consistently (see resources/design-system.md)
 - Mobile-first, then enhance for desktop
 - Fun sarcastic tone in UI copy (overly serious about fantasy football)

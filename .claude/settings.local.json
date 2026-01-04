@@ -4,7 +4,17 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)",
-      "Bash(gh pr create:*)"
+      "Bash(gh pr create:*)",
+      "Skill(feature-flow)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx turbo run test:*)",
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(wc:*)",
+      "Bash(for file in /Users/andrewlee/Repositories/JakesDadAIMonorepo/.claude/**/*.md)",
+      "Bash(done)"
     ]
   }
 }
