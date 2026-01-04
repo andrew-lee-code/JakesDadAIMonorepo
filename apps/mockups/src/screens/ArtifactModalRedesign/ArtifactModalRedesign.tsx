@@ -1,14 +1,14 @@
 import {
+  Box,
+  Typography,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Chip,
   Card,
   CardContent,
   CardMedia,
   CardActionArea,
-  Typography,
-  Dialog,
-  DialogContent,
-  Box,
-  IconButton,
-  Chip,
   CloseIcon,
   ChevronLeft,
   ChevronRight,
@@ -20,8 +20,6 @@ interface ArtifactCardProps {
   description: string;
   imageUrl?: string;
   imageUrls?: string[];
-  link?: string;
-  type?: "link" | "modal";
   modalContent?: string;
   year: number;
 }
@@ -67,13 +65,11 @@ const useSwipeGesture = (
   return { onTouchStart, onTouchMove, onTouchEnd };
 };
 
-const ArtifactCard = ({
+const ImprovedArtifactCard = ({
   title,
   description,
   imageUrl,
   imageUrls,
-  link,
-  type = "modal",
   modalContent,
   year,
 }: ArtifactCardProps) => {
@@ -119,12 +115,8 @@ const ArtifactCard = ({
   }, [modalOpen, hasMultipleImages, handlePrevImage, handleNextImage]);
 
   const handleCardClick = () => {
-    if (type === "link" && link) {
-      window.open(link, "_blank", "noopener,noreferrer");
-    } else {
-      setModalOpen(true);
-      setCurrentImageIndex(0);
-    }
+    setModalOpen(true);
+    setCurrentImageIndex(0);
   };
 
   const handleClose = () => {
@@ -133,6 +125,7 @@ const ArtifactCard = ({
 
   return (
     <>
+      {/* Card - unchanged from original */}
       <Card
         elevation={0}
         sx={{
@@ -161,7 +154,6 @@ const ArtifactCard = ({
                 backgroundPosition: "center",
               }}
             />
-            {/* Year chip */}
             <Chip
               label={year}
               size="small"
@@ -176,26 +168,9 @@ const ArtifactCard = ({
                 height: 26,
               }}
             />
-            {/* Photo count indicator */}
             {hasMultipleImages && (
               <Chip
                 label={`${images.length} photos`}
-                size="small"
-                sx={{
-                  position: "absolute",
-                  top: 12,
-                  right: 12,
-                  backgroundColor: "rgba(0,0,0,0.6)",
-                  color: "#fff",
-                  fontSize: "11px",
-                  height: 24,
-                }}
-              />
-            )}
-            {/* External link indicator */}
-            {type === "link" && (
-              <Chip
-                label="External link"
                 size="small"
                 sx={{
                   position: "absolute",
@@ -386,7 +361,7 @@ const ArtifactCard = ({
                     draggable={false}
                   />
 
-                  {/* Navigation arrows - larger touch targets */}
+                  {/* Navigation arrows - larger touch targets on mobile */}
                   {hasMultipleImages && (
                     <>
                       <IconButton
@@ -560,4 +535,139 @@ const ArtifactCard = ({
   );
 };
 
-export default ArtifactCard;
+// Demo page showcasing the improved modal
+export const ArtifactModalRedesign = () => {
+  const sampleArtifacts: ArtifactCardProps[] = [
+    {
+      title: "Nashville Draft 2025",
+      description: "The league meets in Nashville for the 2025 draft",
+      imageUrls: [
+        "https://ywawkcmujzqlaywudoda.supabase.co/storage/v1/object/public/jakes_dad_public_assets/michael_duck.jpeg",
+        "https://ywawkcmujzqlaywudoda.supabase.co/storage/v1/object/public/jakes_dad_public_assets/pickle.jpeg",
+        "https://ywawkcmujzqlaywudoda.supabase.co/storage/v1/object/public/jakes_dad_public_assets/broadway.jpeg",
+      ],
+      modalContent:
+        "The boys descend on Nashville for an unforgettable draft weekend.",
+      year: 2025,
+    },
+    {
+      title: "Commish Authoritarianism",
+      description: "The Commish shows his true colors",
+      imageUrls: [
+        "https://ywawkcmujzqlaywudoda.supabase.co/storage/v1/object/public/jakes_dad_public_assets/commish_jihad.jpeg",
+      ],
+      modalContent:
+        "After facing resistance from the league on new policy regarding IR eligibility, the commish crashes out and threatens jihad on the league bottomfeeders.",
+      year: 2024,
+    },
+    {
+      title: "The Great Hayride Debacle",
+      description: "Let that shittake go",
+      imageUrls: [
+        "https://ywawkcmujzqlaywudoda.supabase.co/storage/v1/object/public/jakes_dad_public_assets/hayride.JPG",
+      ],
+      modalContent:
+        "Andrew went on a hayride in 2023 and missed a lineup sub, causing a nuclear league controversy.",
+      year: 2023,
+    },
+  ];
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: "linear-gradient(135deg, #155263 0%, #2798b7 100%)",
+          px: { xs: 3, md: 4 },
+          py: { xs: 4, md: 5 },
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            color: "#fff",
+            fontWeight: 700,
+            fontSize: { xs: "28px", md: "36px" },
+            mb: 1,
+          }}
+        >
+          Artifact Modal Redesign
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "rgba(255, 255, 255, 0.85)",
+            fontSize: { xs: "14px", md: "16px" },
+          }}
+        >
+          Click a card to see the improved modal. Try swiping on mobile!
+        </Typography>
+      </Box>
+
+      {/* Cards Grid */}
+      <Box
+        sx={{
+          maxWidth: "1200px",
+          mx: "auto",
+          px: { xs: 3, md: 4 },
+          py: 4,
+        }}
+      >
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "repeat(2, 1fr)",
+              lg: "repeat(3, 1fr)",
+            },
+            gap: 3,
+          }}
+        >
+          {sampleArtifacts.map((artifact) => (
+            <ImprovedArtifactCard key={artifact.title} {...artifact} />
+          ))}
+        </Box>
+
+        {/* Design notes */}
+        <Box
+          sx={{
+            mt: 6,
+            p: 3,
+            backgroundColor: "#fff",
+            borderRadius: "12px",
+            border: "1px solid #e0e0e0",
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ color: "#155263", fontWeight: 700, mb: 2 }}
+          >
+            Design Improvements
+          </Typography>
+          <Box component="ul" sx={{ color: "#666", pl: 2, m: 0 }}>
+            <li>Fullscreen modal on mobile for maximum image viewing</li>
+            <li>Dark overlay background for better image focus</li>
+            <li>Swipe gestures for photo navigation on touch devices</li>
+            <li>Keyboard navigation (arrow keys + Escape)</li>
+            <li>48px touch targets for arrows and close button</li>
+            <li>Responsive spacing using design system tokens</li>
+            <li>Dynamic image sizing (no fixed height)</li>
+            <li>Close button always visible in top-right corner</li>
+            <li>Click outside image to close modal</li>
+            <li>Proper mobile padding to prevent content cutoff</li>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default ArtifactModalRedesign;

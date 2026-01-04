@@ -6,6 +6,7 @@ import { HomeRedesign } from "./screens/HomeRedesign";
 import { HardwareStoreRedesign } from "./screens/HardwareStoreRedesign";
 import { MembersRedesign } from "./screens/MembersRedesign";
 import { LeagueLoreRedesign } from "./screens/LeagueLoreRedesign";
+import { ArtifactModalRedesign } from "./screens/ArtifactModalRedesign";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -29,6 +30,11 @@ const MockupIndex = () => {
       name: "League Lore Redesign",
       path: "/league-lore-redesign",
       description: "Categorized artifacts with hero section and improved card design",
+    },
+    {
+      name: "Artifact Modal Redesign",
+      path: "/artifact-modal-redesign",
+      description: "Improved modal with swipe gestures, responsive sizing, and better UX",
     },
   ];
 
@@ -134,6 +140,7 @@ const App = () => {
       <Route path="/hardware-store-redesign" element={<HardwareStoreRedesign />} />
       <Route path="/members-redesign" element={<MembersRedesign />} />
       <Route path="/league-lore-redesign" element={<LeagueLoreRedesign />} />
+      <Route path="/artifact-modal-redesign" element={<ArtifactModalRedesign />} />
     </Routes>
   );
 };
