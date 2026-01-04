@@ -168,7 +168,7 @@ const LeagueLore = () => {
         sx={{
           maxWidth: "1200px",
           mx: "auto",
-          px: { xs: 2, md: 4 },
+          px: { xs: 3, md: 4 },
           py: 4,
         }}
       >

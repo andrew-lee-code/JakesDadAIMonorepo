@@ -12,6 +12,8 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e --filter=jakesdadwebsite",
+    "test:e2e:critical": "turbo run test:e2e:critical --filter=jakesdadwebsite",
     "clean": "turbo run clean",
     "install:all": "npm install && cd apps/mcp-server && uv sync && cd ../.. && cd scripts && uv sync && cd ..",
     "mcp:dev": "turbo run dev --filter=mcp",

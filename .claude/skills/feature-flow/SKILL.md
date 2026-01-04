@@ -27,8 +27,21 @@ Verify: `npm run test && npm run lint && npm run build`
 
 **Wait for approval.**
 
-### 4. Review & PR
-Read [review.md](../../agents/review.md) → Code quality, functionality, accessibility, create PR.
+### 4. Review, E2E Testing & PR
+Read [review.md](../../agents/review.md) → Code quality, functionality, accessibility.
+
+#### E2E Testing (Required)
+```bash
+npm run test:e2e:critical
+```
+All critical flow tests must pass. If new feature adds critical flows, add tests to `apps/web/e2e/tests/`.
+
+#### User Approval Gate
+After E2E tests pass:
+1. Show test results
+2. Summarize changes
+3. Ask user for approval (manual testing opportunity)
+4. Create PR only after explicit approval
 
 ## When to Use
 - New features with UI
