@@ -7,14 +7,14 @@ import {
   Avatar,
   CircularProgress,
   Alert,
-  Switch,
-  FormControlLabel,
 } from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { capitalizeName } from "../utils/stringUtils";
 import { getOwnerAvatarUrl } from "../utils/imageUtils";
-import { MODERN_ERA_YEARS } from "../constants/years";
+import { type EraKey } from "../constants/years";
+import { EraSelector } from "./EraSelector";
+import { filterByEras } from "../utils/eraUtils";
 
 interface CategoryResult {
   category: string;
@@ -35,7 +35,9 @@ interface TotalPointsAgainstBySeason {
 }
 
 const GoatsAndWoats: React.FC = () => {
-  const [modernEraOnly, setModernEraOnly] = useState(true);
+  const [selectedEras, setSelectedEras] = useState<Set<EraKey>>(
+    new Set(["hppr"])
+  );
 
   const {
     data: records,
@@ -98,12 +100,8 @@ const GoatsAndWoats: React.FC = () => {
   const ownerStats = currentOwners.map((owner) => {
     const allOwnerRecords = records.filter((r) => r.owner_id === owner.id);
 
-    // Filter records by era if specified
-    const ownerRecords = modernEraOnly
-      ? allOwnerRecords.filter((record) =>
-          MODERN_ERA_YEARS.includes(record.year)
-        )
-      : allOwnerRecords;
+    // Filter records by selected eras
+    const ownerRecords = filterByEras(allOwnerRecords, selectedEras);
 
     // Championships (playoff_finish === 1)
     const championships = ownerRecords.filter(
@@ -149,9 +147,7 @@ const GoatsAndWoats: React.FC = () => {
     const ownerPointsData = pointsData.filter(
       (p) => p.owner_name === owner.name
     );
-    const filteredPointsData = modernEraOnly
-      ? ownerPointsData.filter((p) => MODERN_ERA_YEARS.includes(p.year))
-      : ownerPointsData;
+    const filteredPointsData = filterByEras(ownerPointsData, selectedEras);
 
     const totalPoints = filteredPointsData.reduce(
       (sum, p) => sum + p.total_points_scored,
@@ -165,9 +161,7 @@ const GoatsAndWoats: React.FC = () => {
     const ownerPointsAgainstData = pointsAgainstData.filter(
       (p) => p.owner_name === owner.name
     );
-    const filteredPointsAgainstData = modernEraOnly
-      ? ownerPointsAgainstData.filter((p) => MODERN_ERA_YEARS.includes(p.year))
-      : ownerPointsAgainstData;
+    const filteredPointsAgainstData = filterByEras(ownerPointsAgainstData, selectedEras);
 
     const totalPointsAgainst = filteredPointsAgainstData.reduce(
       (sum, p) => sum + p.total_points_against,
@@ -343,39 +337,11 @@ const GoatsAndWoats: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      {/* Modern Era Toggle */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mb: 3,
-        }}
-      >
-        <FormControlLabel
-          control={
-            <Switch
-              checked={modernEraOnly}
-              onChange={(e) => setModernEraOnly(e.target.checked)}
-              sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: "#155263",
-                },
-                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: "#155263",
-                },
-              }}
-            />
-          }
-          label="Modern Era Only"
-          sx={{
-            "& .MuiFormControlLabel-label": {
-              fontSize: { xs: "0.9rem", sm: "1rem" },
-              fontWeight: 500,
-              color: "#155263",
-            },
-          }}
-        />
-      </Box>
+      {/* Era Selector */}
+      <EraSelector
+        selectedEras={selectedEras}
+        onSelectionChange={setSelectedEras}
+      />
 
       {/* Category Cards Grid */}
       <Box

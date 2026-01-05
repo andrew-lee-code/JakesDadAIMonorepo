@@ -1,8 +1,6 @@
 import {
   Box,
   Typography,
-  Switch,
-  FormControlLabel,
   CircularProgress,
   Alert,
   Table,
@@ -24,14 +22,18 @@ import {
 } from "recharts";
 import { useState } from "react";
 import { usePlayoffStats } from "../hooks/usePlayoffStats";
+import { EraSelector } from "./EraSelector";
+import { type EraKey } from "../constants/years";
 
 const PlayoffStats = () => {
-  const [modernEraOnly, setModernEraOnly] = useState(true);
+  const [selectedEras, setSelectedEras] = useState<Set<EraKey>>(
+    new Set(["hppr"])
+  );
   const {
     data: playoffData,
     isLoading,
     error,
-  } = usePlayoffStats(modernEraOnly);
+  } = usePlayoffStats(selectedEras);
 
   if (isLoading) {
     return (
@@ -87,34 +89,11 @@ const PlayoffStats = () => {
         PLAYOFF STATS
       </Typography>
 
-      {/* Modern Era Toggle */}
-      <Box
-        sx={{ display: "flex", justifyContent: "center", mb: { xs: 2, md: 4 } }}
-      >
-        <FormControlLabel
-          control={
-            <Switch
-              checked={modernEraOnly}
-              onChange={(e) => setModernEraOnly(e.target.checked)}
-              sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: "#155263",
-                },
-                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: "#155263",
-                },
-              }}
-            />
-          }
-          label="Modern Era Only"
-          sx={{
-            "& .MuiFormControlLabel-label": {
-              fontWeight: 600,
-              color: "#155263",
-            },
-          }}
-        />
-      </Box>
+      {/* Era Selector */}
+      <EraSelector
+        selectedEras={selectedEras}
+        onSelectionChange={setSelectedEras}
+      />
 
       {/* Charts Section */}
       <Box

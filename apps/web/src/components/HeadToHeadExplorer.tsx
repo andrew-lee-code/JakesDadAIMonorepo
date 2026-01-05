@@ -10,14 +10,14 @@ import {
   Avatar,
   CircularProgress,
   Alert,
-  Switch,
-  FormControlLabel,
 } from "@jakes-dad/shared";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
 import { useOwners } from "../hooks/useRecords";
 import { capitalizeName } from "../utils/stringUtils";
 import { getOwnerAvatarUrl } from "../utils/imageUtils";
-import { MODERN_ERA_YEARS } from "../constants/years";
+import { type EraKey } from "../constants/years";
+import { EraSelector } from "./EraSelector";
+import { filterByEras } from "../utils/eraUtils";
 
 interface MatchupRow {
   id: number;
@@ -33,7 +33,9 @@ interface MatchupRow {
 const HeadToHeadExplorer: React.FC = () => {
   const [owner1Id, setOwner1Id] = useState<number | "">("");
   const [owner2Id, setOwner2Id] = useState<number | "">("");
-  const [modernEraOnly, setModernEraOnly] = useState(true);
+  const [selectedEras, setSelectedEras] = useState<Set<EraKey>>(
+    new Set(["hppr"])
+  );
 
   const {
     data: owners,
@@ -78,10 +80,8 @@ const HeadToHeadExplorer: React.FC = () => {
         (m.winner_owner_id === owner2Id && m.loser_owner_id === owner1Id)
     );
 
-    // Filter by era if specified
-    const headToHeadMatchups = modernEraOnly
-      ? allHeadToHeadMatchups.filter((m) => MODERN_ERA_YEARS.includes(m.year))
-      : allHeadToHeadMatchups;
+    // Filter by selected eras
+    const headToHeadMatchups = filterByEras(allHeadToHeadMatchups, selectedEras);
 
     // Calculate wins for owner1
     const owner1Wins = headToHeadMatchups.filter(
@@ -154,7 +154,7 @@ const HeadToHeadExplorer: React.FC = () => {
       regularSeasonGames: regularSeasonMatchups.length,
       playoffGames: playoffMatchups.length,
     };
-  }, [matchups, owners, owner1Id, owner2Id, modernEraOnly]);
+  }, [matchups, owners, owner1Id, owner2Id, selectedEras]);
 
   if (ownersLoading || matchupsLoading) {
     return (
@@ -196,39 +196,11 @@ const HeadToHeadExplorer: React.FC = () => {
         HEAD-TO-HEAD EXPLORER
       </Typography>
 
-      {/* Modern Era Toggle */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mb: 3,
-        }}
-      >
-        <FormControlLabel
-          control={
-            <Switch
-              checked={modernEraOnly}
-              onChange={(e) => setModernEraOnly(e.target.checked)}
-              sx={{
-                "& .MuiSwitch-switchBase.Mui-checked": {
-                  color: "#155263",
-                },
-                "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                  backgroundColor: "#155263",
-                },
-              }}
-            />
-          }
-          label="Modern Era Only"
-          sx={{
-            "& .MuiFormControlLabel-label": {
-              fontSize: { xs: "0.9rem", sm: "1rem" },
-              fontWeight: 500,
-              color: "#155263",
-            },
-          }}
-        />
-      </Box>
+      {/* Era Selector */}
+      <EraSelector
+        selectedEras={selectedEras}
+        onSelectionChange={setSelectedEras}
+      />
 
       {/* Owner Selection */}
       <Box

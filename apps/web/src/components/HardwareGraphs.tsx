@@ -17,26 +17,29 @@ import {
   useHardwareByOwnerFiltered,
   useLosersByOwnerFiltered,
 } from "../hooks/useHardwareByOwner";
-import { MODERN_ERA_YEARS, ALL_YEARS } from "../constants/years";
+import { type EraKey } from "../constants/years";
+import { getYearsForEras } from "../utils/eraUtils";
 
 interface HardwareGraphsProps {
-  modernEraOnly: boolean;
+  selectedEras: Set<EraKey>;
 }
 
-const HardwareGraphs = ({ modernEraOnly }: HardwareGraphsProps) => {
+const HardwareGraphs = ({ selectedEras }: HardwareGraphsProps) => {
+  // Get years for selected eras
+  const selectedYears = getYearsForEras(selectedEras);
 
-  // Get filtered data based on toggle
+  // Get filtered data based on selected eras
   const {
     data: hardwareData,
     isLoading: hardwareLoading,
     error: hardwareError,
-  } = useHardwareByOwnerFiltered(modernEraOnly ? MODERN_ERA_YEARS : ALL_YEARS);
+  } = useHardwareByOwnerFiltered(selectedYears);
 
   const {
     data: losersData,
     isLoading: losersLoading,
     error: losersError,
-  } = useLosersByOwnerFiltered(modernEraOnly ? MODERN_ERA_YEARS : ALL_YEARS);
+  } = useLosersByOwnerFiltered(selectedYears);
 
   const isLoading = hardwareLoading || losersLoading;
   const error = hardwareError || losersError;

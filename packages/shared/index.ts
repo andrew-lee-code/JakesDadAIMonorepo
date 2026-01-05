@@ -24,6 +24,8 @@ export {
   InputLabel,
   Select,
   MenuItem,
+  ToggleButton,
+  ToggleButtonGroup,
   // Surfaces
   Paper,
   Card,
