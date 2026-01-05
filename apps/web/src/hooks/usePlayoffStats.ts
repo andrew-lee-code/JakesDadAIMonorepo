@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useRecords, useOwners } from "./useRecords";
-import { MODERN_ERA_YEARS } from "../constants/years";
+import { type EraKey } from "../constants/years";
+import { filterByEras } from "../utils/eraUtils";
 
 // Function to capitalize name properly
 function capitalizeName(name: string): string {
@@ -31,7 +32,7 @@ export interface PlayoffStatsRow {
   championship_rate: number;
 }
 
-export function usePlayoffStats(modernEraOnly: boolean = false) {
+export function usePlayoffStats(selectedEras: Set<EraKey>) {
   const {
     data: records,
     isLoading: recordsLoading,
@@ -57,10 +58,8 @@ export function usePlayoffStats(modernEraOnly: boolean = false) {
       (owner) => owner.years_active && owner.years_active.includes(2025)
     );
 
-    // Filter records by era if specified
-    const filteredRecords = modernEraOnly
-      ? records.filter((record) => MODERN_ERA_YEARS.includes(record.year))
-      : records;
+    // Filter records by selected eras
+    const filteredRecords = filterByEras(records, selectedEras);
 
     // Only include records where the owner made playoffs (playoff_finish exists and > 0)
     const playoffRecords = filteredRecords.filter(
@@ -176,7 +175,7 @@ export function usePlayoffStats(modernEraOnly: boolean = false) {
       finishes,
       statsTable,
     };
-  }, [records, owners, modernEraOnly]);
+  }, [records, owners, selectedEras]);
 
   return {
     data: playoffStats,

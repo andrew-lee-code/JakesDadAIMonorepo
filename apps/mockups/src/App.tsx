@@ -8,6 +8,7 @@ import { MembersRedesign } from "./screens/MembersRedesign";
 import { LeagueLoreRedesign } from "./screens/LeagueLoreRedesign";
 import { ArtifactModalRedesign } from "./screens/ArtifactModalRedesign";
 import { AnalyticsDashboard } from "./screens/AnalyticsDashboard";
+import EraSelectorDemo from "./screens/EraSelectorDemo/EraSelectorDemo";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -41,6 +42,11 @@ const MockupIndex = () => {
       name: "Analytics Dashboard",
       path: "/analytics-dashboard",
       description: "Redesigned analytics page with dashboard layout, sections, and navigation",
+    },
+    {
+      name: "Era Selector Component (Retrospective)",
+      path: "/era-selector-demo",
+      description: "Multi-select era filtering component for HPPR Era feature - shows various states and behaviors",
     },
   ];
 
@@ -148,6 +154,7 @@ const App = () => {
       <Route path="/league-lore-redesign" element={<LeagueLoreRedesign />} />
       <Route path="/artifact-modal-redesign" element={<ArtifactModalRedesign />} />
       <Route path="/analytics-dashboard" element={<AnalyticsDashboard />} />
+      <Route path="/era-selector-demo" element={<EraSelectorDemo />} />
     </Routes>
   );
 };

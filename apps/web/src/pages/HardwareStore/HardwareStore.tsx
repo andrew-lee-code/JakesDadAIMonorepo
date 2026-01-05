@@ -2,8 +2,6 @@ import { useState } from "react";
 import {
   Box,
   Typography,
-  Switch,
-  FormControlLabel,
   Card,
   CardContent,
   Chip,
@@ -13,11 +11,14 @@ import {
 } from "@jakes-dad/shared";
 import HardwareGraphs from "../../components/HardwareGraphs";
 import { useHardwareBySeason } from "../../hooks/useHardwareByOwner";
-import { MODERN_ERA_YEARS, PRE_MODERN_ERA_YEARS } from "../../constants/years";
+import { type EraKey, MODERN_ERA_YEARS, PRE_MODERN_ERA_YEARS, HPPR_ERA_YEARS } from "../../constants/years";
 import { getOwnerAvatarUrl } from "../../utils/imageUtils";
+import { EraSelector } from "../../components/EraSelector";
 
 const HardwareStore = () => {
-  const [modernEraOnly, setModernEraOnly] = useState(true);
+  const [selectedEras, setSelectedEras] = useState<Set<EraKey>>(
+    new Set(["hppr"])
+  );
 
   // Fetch year-by-year hardware data (always show all years)
   const {
@@ -69,41 +70,15 @@ const HardwareStore = () => {
           py: 4,
         }}
       >
-        {/* Modern Era Toggle */}
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={modernEraOnly}
-                onChange={(e) => setModernEraOnly(e.target.checked)}
-                sx={{
-                  "& .MuiSwitch-switchBase.Mui-checked": {
-                    color: "#2798b7",
-                  },
-                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                    backgroundColor: "#2798b7",
-                  },
-                }}
-              />
-            }
-            label={
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 500,
-                  color: "#155263",
-                  ml: 1,
-                }}
-              >
-                Modern Era Only
-              </Typography>
-            }
-          />
-        </Box>
+        {/* Era Selector */}
+        <EraSelector
+          selectedEras={selectedEras}
+          onSelectionChange={setSelectedEras}
+        />
 
         {/* Bar Charts Section */}
         <Box sx={{ mb: 6 }}>
-          <HardwareGraphs modernEraOnly={modernEraOnly} />
+          <HardwareGraphs selectedEras={selectedEras} />
         </Box>
 
         {/* Year-by-Year Hall of Fame */}
@@ -156,6 +131,8 @@ const HardwareStore = () => {
             >
               {seasonData.map((season, index) => {
                 // Show section headers for era divisions
+                const isFirstHPPREra =
+                  season.year === Math.max(...HPPR_ERA_YEARS);
                 const isFirstModernEra =
                   season.year === Math.max(...MODERN_ERA_YEARS);
                 const isFirstPreModernEra =
@@ -163,8 +140,8 @@ const HardwareStore = () => {
 
                 return (
                   <Box key={season.year}>
-                    {/* Modern Era Header */}
-                    {isFirstModernEra && (
+                    {/* HPPR Era Header */}
+                    {isFirstHPPREra && (
                       <Typography
                         variant="h6"
                         sx={{
@@ -177,7 +154,25 @@ const HardwareStore = () => {
                           letterSpacing: "1px",
                         }}
                       >
-                        Modern Era
+                        HPPR Era (2022-Present)
+                      </Typography>
+                    )}
+
+                    {/* Modern Era Header */}
+                    {isFirstModernEra && (
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 700,
+                          color: "#155263",
+                          mb: 2,
+                          mt: 4,
+                          fontSize: "18px",
+                          textTransform: "uppercase",
+                          letterSpacing: "1px",
+                        }}
+                      >
+                        Modern Era (2016-2021)
                       </Typography>
                     )}
 

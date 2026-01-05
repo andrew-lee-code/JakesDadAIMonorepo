@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { useSupabaseQuery } from "./useSupabaseQuery";
 import { capitalizeName } from "../utils/stringUtils";
 import { getOwnerAvatarUrl } from "../utils/imageUtils";
-import { MODERN_ERA_YEARS } from "../constants/years";
+import { type EraKey } from "../constants/years";
+import { filterByEras } from "../utils/eraUtils";
 
 export interface RecordRow {
   id: number;
@@ -44,7 +45,7 @@ export function useRecords() {
   return result;
 }
 
-export function useMemberStats(modernEraOnly: boolean = false) {
+export function useMemberStats(selectedEras: Set<EraKey>) {
   const {
     data: records,
     isLoading: recordsLoading,
@@ -68,10 +69,8 @@ export function useMemberStats(modernEraOnly: boolean = false) {
     // Group records by owner_id and calculate stats
     const statsMap: Record<number, MemberStats> = {};
 
-    // Filter records by era if specified
-    const filteredRecords = modernEraOnly
-      ? records.filter((record) => MODERN_ERA_YEARS.includes(record.year))
-      : records;
+    // Filter records by selected eras
+    const filteredRecords = filterByEras(records, selectedEras);
 
     filteredRecords.forEach((record) => {
       const ownerId = record.owner_id;
@@ -130,7 +129,7 @@ export function useMemberStats(modernEraOnly: boolean = false) {
       const bPct = parseFloat(b.winPercentage.replace("%", ""));
       return bPct - aPct;
     });
-  }, [records, owners, modernEraOnly]);
+  }, [records, owners, selectedEras]);
 
   return {
     data: memberStats,

@@ -5,15 +5,17 @@ import {
   Avatar,
   CircularProgress,
   Alert,
-  Switch,
-  FormControlLabel,
 } from "@jakes-dad/shared";
 import { useState, useMemo } from "react";
 import { useMemberStats } from "../../hooks/useRecords";
+import { EraSelector } from "../../components/EraSelector";
+import { type EraKey } from "../../constants/years";
 
 const Members = () => {
-  const [modernEraOnly, setModernEraOnly] = useState(true);
-  const { data: memberStats, isLoading, error } = useMemberStats(modernEraOnly);
+  const [selectedEras, setSelectedEras] = useState<Set<EraKey>>(
+    new Set(["hppr"])
+  );
+  const { data: memberStats, isLoading, error } = useMemberStats(selectedEras);
 
   // Calculate min/max from actual data for dynamic color range
   const { minPct, maxPct } = useMemo(() => {
@@ -186,49 +188,11 @@ const Members = () => {
           py: 4,
         }}
       >
-        {/* Modern Era Toggle */}
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={modernEraOnly}
-                onChange={(e) => setModernEraOnly(e.target.checked)}
-                sx={{
-                  "& .MuiSwitch-switchBase.Mui-checked": {
-                    color: "#2798b7",
-                  },
-                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
-                    backgroundColor: "#2798b7",
-                  },
-                }}
-              />
-            }
-            label={
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 500,
-                  color: "#155263",
-                  ml: 1,
-                }}
-              >
-                Modern Era Only
-              </Typography>
-            }
-          />
-        </Box>
-        <Box sx={{ textAlign: "center", mt: 2, pb: 4 }}>
-          <Typography
-            sx={{
-              color: "#666",
-              fontSize: "14px",
-              fontStyle: "italic",
-            }}
-          >
-            Stats from{" "}
-            {modernEraOnly ? "Modern Era (2016+)" : "All Eras (2012+)"}
-          </Typography>
-        </Box>
+        {/* Era Selector */}
+        <EraSelector
+          selectedEras={selectedEras}
+          onSelectionChange={setSelectedEras}
+        />
 
         {/* Member Cards Grid */}
         <Box
