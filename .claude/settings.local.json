@@ -21,7 +21,8 @@
       "WebFetch(domain:playwright.dev)",
       "Bash(npm install:*)",
       "Bash(npx playwright install chromium)",
-      "Bash(npx playwright test:*)"
+      "Bash(npx playwright test:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
