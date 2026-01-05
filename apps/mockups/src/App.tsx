@@ -7,6 +7,7 @@ import { HardwareStoreRedesign } from "./screens/HardwareStoreRedesign";
 import { MembersRedesign } from "./screens/MembersRedesign";
 import { LeagueLoreRedesign } from "./screens/LeagueLoreRedesign";
 import { ArtifactModalRedesign } from "./screens/ArtifactModalRedesign";
+import { AnalyticsDashboard } from "./screens/AnalyticsDashboard";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -35,6 +36,11 @@ const MockupIndex = () => {
       name: "Artifact Modal Redesign",
       path: "/artifact-modal-redesign",
       description: "Improved modal with swipe gestures, responsive sizing, and better UX",
+    },
+    {
+      name: "Analytics Dashboard",
+      path: "/analytics-dashboard",
+      description: "Redesigned analytics page with dashboard layout, sections, and navigation",
     },
   ];
 
@@ -141,6 +147,7 @@ const App = () => {
       <Route path="/members-redesign" element={<MembersRedesign />} />
       <Route path="/league-lore-redesign" element={<LeagueLoreRedesign />} />
       <Route path="/artifact-modal-redesign" element={<ArtifactModalRedesign />} />
+      <Route path="/analytics-dashboard" element={<AnalyticsDashboard />} />
     </Routes>
   );
 };
