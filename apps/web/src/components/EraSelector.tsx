@@ -10,14 +10,33 @@ interface EraSelectorProps {
 const getCombinedRange = (selectedEras: Set<EraKey>): string => {
   if (selectedEras.size === 0) return "";
 
+  // Get all selected era ranges in order
+  const selectedRanges: string[] = [];
+  if (selectedEras.has("pre-modern")) selectedRanges.push(ERA_CONFIG["pre-modern"].range);
+  if (selectedEras.has("modern")) selectedRanges.push(ERA_CONFIG["modern"].range);
+  if (selectedEras.has("hppr")) selectedRanges.push(ERA_CONFIG["hppr"].range);
+
+  // If only one era selected, just return that range
+  if (selectedRanges.length === 1) return selectedRanges[0];
+
+  // Check if years are continuous
   const years: number[] = [];
   if (selectedEras.has("pre-modern")) years.push(...ERA_CONFIG["pre-modern"].years);
   if (selectedEras.has("modern")) years.push(...ERA_CONFIG["modern"].years);
   if (selectedEras.has("hppr")) years.push(...ERA_CONFIG["hppr"].years);
 
-  const min = Math.min(...years);
-  const max = Math.max(...years);
+  const sortedYears = [...years].sort((a, b) => a - b);
+  const min = sortedYears[0];
+  const max = sortedYears[sortedYears.length - 1];
 
+  // Check for gaps: if we have fewer years than the range suggests, show individual ranges
+  const expectedYearCount = max - min + 1;
+  if (sortedYears.length < expectedYearCount) {
+    // There are gaps, show individual ranges
+    return selectedRanges.join(", ");
+  }
+
+  // Years are continuous, show combined range
   return `${min}-${max}`;
 };
 
