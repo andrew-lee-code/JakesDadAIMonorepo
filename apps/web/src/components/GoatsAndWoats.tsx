@@ -9,7 +9,6 @@ import {
   Alert,
   Switch,
   FormControlLabel,
-  Stack,
 } from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { useSupabaseQuery } from "../hooks/useSupabaseQuery";
@@ -331,22 +330,20 @@ const GoatsAndWoats: React.FC = () => {
     ),
   ];
 
-  return (
-    <Box sx={{ width: "100%", mb: 6, mx: 0 }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{
-          textAlign: "center",
-          mb: 2,
-          fontWeight: 700,
-          color: "#155263",
-          fontSize: { xs: "2rem", sm: "2.5rem" },
-        }}
-      >
-        GOATS AND WOATS
-      </Typography>
+  // Helper to get rank color
+  const getRankColor = (rank: number, isGoat: boolean) => {
+    if (rank === 1) return isGoat ? "#daa520" : "#dc143c";
+    if (rank === 2) return isGoat ? "#c0c0c0" : "#ff6b6b";
+    return isGoat ? "#cd7f32" : "#ffa07a";
+  };
 
+  // Calculate max entries for visual balance
+  const getMaxEntries = (category: CategoryResult) =>
+    Math.max(category.goats.length, category.woats.length);
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      {/* Modern Era Toggle */}
       <Box
         sx={{
           display: "flex",
@@ -380,274 +377,212 @@ const GoatsAndWoats: React.FC = () => {
         />
       </Box>
 
-      <Box sx={{ width: "100%", px: 0 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: { xs: 1, sm: 2 },
-            width: "100%",
-          }}
-        >
-          {categories.map((category) => (
-            <Box
+      {/* Category Cards Grid */}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            lg: "repeat(4, 1fr)",
+          },
+          gap: 2,
+        }}
+      >
+        {categories.map((category) => {
+          const maxEntries = getMaxEntries(category);
+
+          return (
+            <Card
               key={category.category}
+              elevation={0}
               sx={{
-                width: {
-                  xs: "calc(50% - 4px)", // 2 per row on mobile
-                  md: "calc(25% - 12px)", // 4 per row on desktop
+                borderRadius: 3,
+                border: "2px solid #e0e0e0",
+                backgroundColor: "#ffffff",
+                height: "100%",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                  borderColor: "#155263",
                 },
-                display: "flex",
               }}
             >
-              <Card
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  backgroundColor: "background.paper",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  borderRadius: 2,
-                  minWidth: 0, // Allows card to shrink below its content width
-                }}
-              >
-                <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      textAlign: "center",
-                      mb: 2,
-                      fontWeight: 600,
-                      color: "primary.main",
-                      fontSize: { xs: "0.9rem", sm: "1.25rem" },
-                      lineHeight: { xs: 1.2, sm: 1.4 },
-                      minHeight: { xs: "2.4rem", sm: "auto" },
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {category.category}
-                  </Typography>
+              <CardContent sx={{ p: 2.5, height: "100%", display: "flex", flexDirection: "column" }}>
+                {/* Category Title */}
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    fontWeight: 700,
+                    color: "#155263",
+                    textAlign: "center",
+                    mb: 2,
+                    fontSize: "14px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                  }}
+                >
+                  {category.category}
+                </Typography>
 
-                  {/* GOATS Box */}
-                  <Box sx={{ mb: 2 }}>
+                {/* Side-by-side GOATS and WOATS */}
+                <Box sx={{ display: "flex", gap: 1.5, flex: 1 }}>
+                  {/* GOATS Column */}
+                  <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
                     <Typography
-                      variant="subtitle2"
                       sx={{
-                        mb: 1,
-                        fontWeight: 600,
+                        fontSize: "11px",
+                        fontWeight: 700,
                         color: "#155263",
                         textAlign: "center",
+                        mb: 1,
+                        textTransform: "uppercase",
                       }}
                     >
-                      🐐 GOAT{category.goats.length > 1 ? "S" : ""}
+                      GOATS
                     </Typography>
                     <Box
                       sx={{
                         backgroundColor: "#155263",
-                        borderRadius: "12px",
-                        padding: { xs: "10px", sm: "14px" },
+                        borderRadius: 2,
+                        p: 1,
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 0.5,
+                        minHeight: maxEntries * 44,
                       }}
                     >
-                      <Stack direction="column" spacing={{ xs: 1, sm: 1.25 }}>
-                        {[1, 2, 3].map((rank) => {
-                          const goatsForRank = category.goats.filter(g => g.rank === rank);
-                          if (goatsForRank.length === 0) return null;
-
-                          const rankText = rank === 1 ? "1st Place" : rank === 2 ? "2nd Place" : "3rd Place";
-                          const isFirstPlace = rank === 1;
-
-                          return (
-                            <Box
-                              key={rank}
+                      {category.goats.map((goat, idx) => (
+                        <Box
+                          key={`${goat.owner_name}-${idx}`}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            backgroundColor: "rgba(255,255,255,0.1)",
+                            borderRadius: 1,
+                            p: 0.75,
+                            borderLeft: `3px solid ${getRankColor(goat.rank, true)}`,
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: "10px",
+                              fontWeight: 700,
+                              color: getRankColor(goat.rank, true),
+                              minWidth: 16,
+                            }}
+                          >
+                            #{goat.rank}
+                          </Typography>
+                          <Avatar
+                            src={getOwnerAvatarUrl(goat.owner_name)}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                          <Box sx={{ flex: 1, color: "#fff", minWidth: 0 }}>
+                            <Typography
                               sx={{
-                                backgroundColor: "rgba(255,255,255,0.1)",
-                                border: isFirstPlace ? "2px solid #FFD700" : "1px solid rgba(255,255,255,0.2)",
-                                borderRadius: "10px",
-                                padding: { xs: "8px", sm: "10px" },
+                                fontWeight: 600,
+                                fontSize: "12px",
+                                lineHeight: 1.2,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
                               }}
                             >
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "0.7rem", sm: "0.8rem" },
-                                  fontWeight: 700,
-                                  color: isFirstPlace ? "#FFD700" : "#fff",
-                                  mb: 0.5,
-                                  textAlign: "center",
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.5px",
-                                }}
-                              >
-                                {rankText}
-                                {goatsForRank.length > 1 && (
-                                  <span style={{ opacity: 0.8, fontStyle: "italic", fontWeight: 400, marginLeft: "4px" }}>
-                                    ({goatsForRank.length}-way tie)
-                                  </span>
-                                )}
-                              </Typography>
-                              <Stack direction="column" spacing={0.5}>
-                                {goatsForRank.map(goat => (
-                                  <Box
-                                    key={goat.owner_name}
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: { xs: 1, sm: 1.5 },
-                                      padding: { xs: "4px", sm: "6px" },
-                                    }}
-                                  >
-                                    <Avatar
-                                      src={getOwnerAvatarUrl(goat.owner_name)}
-                                      sx={{
-                                        width: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
-                                        height: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
-                                      }}
-                                    />
-                                    <Box sx={{ flex: 1, color: "#fff" }}>
-                                      <Typography
-                                        sx={{
-                                          fontWeight: isFirstPlace ? 600 : 500,
-                                          fontSize: {
-                                            xs: isFirstPlace ? "0.875rem" : "0.75rem",
-                                            sm: isFirstPlace ? "1rem" : "0.875rem",
-                                          },
-                                          lineHeight: 1.2,
-                                        }}
-                                      >
-                                        {goat.owner_name}
-                                      </Typography>
-                                      <Typography
-                                        sx={{
-                                          fontSize: { xs: "0.7rem", sm: "0.8rem" },
-                                          opacity: 0.9,
-                                          lineHeight: 1.1,
-                                        }}
-                                      >
-                                        {goat.displayValue}
-                                      </Typography>
-                                    </Box>
-                                  </Box>
-                                ))}
-                              </Stack>
-                            </Box>
-                          );
-                        })}
-                      </Stack>
+                              {goat.owner_name}
+                            </Typography>
+                            <Typography sx={{ fontSize: "10px", opacity: 0.85 }}>
+                              {goat.displayValue}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
                     </Box>
                   </Box>
 
-                  {/* WOATS Box */}
-                  <Box>
+                  {/* WOATS Column */}
+                  <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
                     <Typography
-                      variant="subtitle2"
                       sx={{
-                        mb: 1,
-                        fontWeight: 600,
+                        fontSize: "11px",
+                        fontWeight: 700,
                         color: "#666",
                         textAlign: "center",
+                        mb: 1,
+                        textTransform: "uppercase",
                       }}
                     >
-                      🗑️ WOAT{category.woats.length > 1 ? "S" : ""}
+                      WOATS
                     </Typography>
                     <Box
                       sx={{
-                        backgroundColor: "#fff",
+                        backgroundColor: "#f5f5f5",
+                        borderRadius: 2,
+                        p: 1,
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 0.5,
                         border: "1px solid #e0e0e0",
-                        borderRadius: "12px",
-                        padding: { xs: "10px", sm: "14px" },
+                        minHeight: maxEntries * 44,
                       }}
                     >
-                      <Stack direction="column" spacing={{ xs: 1, sm: 1.25 }}>
-                        {[1, 2, 3].map((rank) => {
-                          const woatsForRank = category.woats.filter(w => w.rank === rank);
-                          if (woatsForRank.length === 0) return null;
-
-                          const rankText = rank === 1 ? "1st Place" : rank === 2 ? "2nd Place" : "3rd Place";
-                          const isFirstPlace = rank === 1;
-
-                          return (
-                            <Box
-                              key={rank}
+                      {category.woats.map((woat, idx) => (
+                        <Box
+                          key={`${woat.owner_name}-${idx}`}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            backgroundColor: "#fff",
+                            borderRadius: 1,
+                            p: 0.75,
+                            borderLeft: `3px solid ${getRankColor(woat.rank, false)}`,
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: "10px",
+                              fontWeight: 700,
+                              color: getRankColor(woat.rank, false),
+                              minWidth: 16,
+                            }}
+                          >
+                            #{woat.rank}
+                          </Typography>
+                          <Avatar
+                            src={getOwnerAvatarUrl(woat.owner_name)}
+                            sx={{ width: 24, height: 24 }}
+                          />
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography
                               sx={{
-                                backgroundColor: "#f5f5f5",
-                                border: isFirstPlace ? "2px solid #FFD700" : "1px solid #e0e0e0",
-                                borderRadius: "10px",
-                                padding: { xs: "8px", sm: "10px" },
+                                fontWeight: 600,
+                                fontSize: "12px",
+                                color: "#333",
+                                lineHeight: 1.2,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
                               }}
                             >
-                              <Typography
-                                sx={{
-                                  fontSize: { xs: "0.7rem", sm: "0.8rem" },
-                                  fontWeight: 700,
-                                  color: isFirstPlace ? "#155263" : "#666",
-                                  mb: 0.5,
-                                  textAlign: "center",
-                                  textTransform: "uppercase",
-                                  letterSpacing: "0.5px",
-                                }}
-                              >
-                                {rankText}
-                                {woatsForRank.length > 1 && (
-                                  <span style={{ opacity: 0.8, fontStyle: "italic", fontWeight: 400, marginLeft: "4px" }}>
-                                    ({woatsForRank.length}-way tie)
-                                  </span>
-                                )}
-                              </Typography>
-                              <Stack direction="column" spacing={0.5}>
-                                {woatsForRank.map(woat => (
-                                  <Box
-                                    key={woat.owner_name}
-                                    sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: { xs: 1, sm: 1.5 },
-                                      padding: { xs: "4px", sm: "6px" },
-                                    }}
-                                  >
-                                    <Avatar
-                                      src={getOwnerAvatarUrl(woat.owner_name)}
-                                      sx={{
-                                        width: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
-                                        height: { xs: isFirstPlace ? 32 : 28, sm: isFirstPlace ? 36 : 32 },
-                                      }}
-                                    />
-                                    <Box sx={{ flex: 1, color: "#000" }}>
-                                      <Typography
-                                        sx={{
-                                          fontWeight: isFirstPlace ? 600 : 500,
-                                          fontSize: {
-                                            xs: isFirstPlace ? "0.875rem" : "0.75rem",
-                                            sm: isFirstPlace ? "1rem" : "0.875rem",
-                                          },
-                                          lineHeight: 1.2,
-                                        }}
-                                      >
-                                        {woat.owner_name}
-                                      </Typography>
-                                      <Typography
-                                        sx={{
-                                          fontSize: { xs: "0.7rem", sm: "0.8rem" },
-                                          opacity: 0.9,
-                                          lineHeight: 1.1,
-                                        }}
-                                      >
-                                        {woat.displayValue}
-                                      </Typography>
-                                    </Box>
-                                  </Box>
-                                ))}
-                              </Stack>
-                            </Box>
-                          );
-                        })}
-                      </Stack>
+                              {woat.owner_name}
+                            </Typography>
+                            <Typography sx={{ fontSize: "10px", color: "#666" }}>
+                              {woat.displayValue}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
                     </Box>
                   </Box>
-                </CardContent>
-              </Card>
-            </Box>
-          ))}
-        </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          );
+        })}
       </Box>
     </Box>
   );
