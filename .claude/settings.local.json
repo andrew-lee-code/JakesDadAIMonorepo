@@ -24,7 +24,9 @@
       "Bash(npx playwright test:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(npm run test:e2e:critical:*)",
-      "Skill(pr-review)"
+      "Skill(pr-review)",
+      "Skill(frontend-design)",
+      "Bash(npm run dev:*)"
     ]
   }
 }

@@ -9,13 +9,13 @@ Full feature lifecycle with approval gates.
 
 ## Phases
 
-1. **Plan** → Use plan mode to understand the codebase and create a comprehensive plan.
+1. **Plan** → Use `EnterPlanMode`, explore codebase, create comprehensive plan, `ExitPlanMode`.
 
-2. **Architect + Design** (parallel) → Read [architect.md](../../agents/architect.md) + [design.md](../../agents/design.md). **Wait for approval.**
+2. **Architect + Design (parallel)** → Use `frontend-design` skill to create mockups in `apps/mockups/`. Read [architect.md](../../agents/architect.md) for architecture blueprint. **STOP - Wait for user approval.**
 
-3. **Build** → Read [build.md](../../agents/build.md), implement with tests. Verify: `npm run test && npm run build`. **Wait for approval.**
+3. **Build** → Read [build.md](../../agents/build.md), implement in main app with tests. Verify: `npm run test && npm run build`. **STOP - Wait for user approval.**
 
-4. **Review & PR** → Read [review.md](../../agents/review.md). Run `npm run test:e2e:critical`. Get user approval before creating PR.
+4. **Review & PR** → Read [review.md](../../agents/review.md). Run `npm run test:e2e:critical`. Get user approval, then create PR.
 
 ## When to Use
 
