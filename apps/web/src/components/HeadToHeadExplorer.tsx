@@ -81,7 +81,10 @@ const HeadToHeadExplorer: React.FC = () => {
     );
 
     // Filter by selected eras
-    const headToHeadMatchups = filterByEras(allHeadToHeadMatchups, selectedEras);
+    const headToHeadMatchups = filterByEras(
+      allHeadToHeadMatchups,
+      selectedEras
+    );
 
     // Calculate wins for owner1
     const owner1Wins = headToHeadMatchups.filter(
@@ -182,20 +185,6 @@ const HeadToHeadExplorer: React.FC = () => {
 
   return (
     <Box sx={{ width: "100%", mb: 6 }}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{
-          textAlign: "center",
-          mb: 3,
-          fontWeight: 700,
-          color: "#155263",
-          fontSize: { xs: "2rem", sm: "2.5rem" },
-        }}
-      >
-        HEAD-TO-HEAD EXPLORER
-      </Typography>
-
       {/* Era Selector */}
       <EraSelector
         selectedEras={selectedEras}

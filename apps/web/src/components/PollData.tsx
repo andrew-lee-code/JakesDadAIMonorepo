@@ -61,20 +61,7 @@ const PollData = () => {
   if (!pollData || pollData.length === 0) {
     return (
       <Box>
-        <Box sx={{ textAlign: "center", mb: 3 }}>
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{
-              textAlign: "center",
-              mb: 2,
-              fontWeight: 700,
-              color: "#155263",
-              fontSize: { xs: "2rem", sm: "2.5rem" },
-            }}
-          >
-            POLL DATA
-          </Typography>
+        <Box sx={{ mb: 3 }}>
           <Box
             sx={{
               display: "flex",
@@ -117,20 +104,7 @@ const PollData = () => {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "center", mb: 3 }}>
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{
-            textAlign: "center",
-            mb: 2,
-            fontWeight: 700,
-            color: "#155263",
-            fontSize: { xs: "2rem", sm: "2.5rem" },
-          }}
-        >
-          POLL DATA
-        </Typography>
+      <Box sx={{ mb: 3 }}>
         <Box
           sx={{
             display: "flex",

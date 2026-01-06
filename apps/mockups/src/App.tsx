@@ -9,6 +9,7 @@ import { LeagueLoreRedesign } from "./screens/LeagueLoreRedesign";
 import { ArtifactModalRedesign } from "./screens/ArtifactModalRedesign";
 import { AnalyticsDashboard } from "./screens/AnalyticsDashboard";
 import EraSelectorDemo from "./screens/EraSelectorDemo/EraSelectorDemo";
+import { WinLossTableRedesign } from "./screens/WinLossTableRedesign";
 
 const MockupIndex = () => {
   // List of available mockups - add new mockups here
@@ -47,6 +48,11 @@ const MockupIndex = () => {
       name: "Era Selector Component (Retrospective)",
       path: "/era-selector-demo",
       description: "Multi-select era filtering component for HPPR Era feature - shows various states and behaviors",
+    },
+    {
+      name: "Raw Win/Loss Table Redesign",
+      path: "/win-loss-table-redesign",
+      description: "Enhanced table with era delineation, color-coded performance, owner avatars, and premium visual polish",
     },
   ];
 
@@ -155,6 +161,7 @@ const App = () => {
       <Route path="/artifact-modal-redesign" element={<ArtifactModalRedesign />} />
       <Route path="/analytics-dashboard" element={<AnalyticsDashboard />} />
       <Route path="/era-selector-demo" element={<EraSelectorDemo />} />
+      <Route path="/win-loss-table-redesign" element={<WinLossTableRedesign />} />
     </Routes>
   );
 };

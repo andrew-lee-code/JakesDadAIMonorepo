@@ -76,17 +76,17 @@ const PlayoffStats = () => {
   return (
     <Box sx={{ width: "100%", p: { xs: 1, sm: 2, md: 3 } }}>
       <Typography
-        variant="h4"
-        gutterBottom
+        variant="h6"
         sx={{
-          textAlign: "center",
           mb: 2,
-          fontWeight: 700,
+          fontWeight: 600,
           color: "#155263",
-          fontSize: { xs: "2rem", sm: "2.5rem" },
+          fontSize: { xs: "1rem", sm: "1.125rem" },
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
         }}
       >
-        PLAYOFF STATS
+        Playoff Stats
       </Typography>
 
       {/* Era Selector */}

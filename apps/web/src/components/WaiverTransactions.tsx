@@ -364,13 +364,7 @@ const WaiverTransactions = () => {
 
   return (
     <Box>
-      <Box sx={{ textAlign: "center", mb: 3 }}>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: 700, color: "#155263", mb: 2 }}
-        >
-          WAIVER TRANSACTIONS
-        </Typography>
+      <Box sx={{ mb: 3, textAlign: "center" }}>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>Year</InputLabel>
           <Select

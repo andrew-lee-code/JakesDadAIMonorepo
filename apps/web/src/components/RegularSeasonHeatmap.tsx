@@ -119,30 +119,17 @@ const RegularSeasonHeatmap = () => {
   return (
     <Box sx={{ width: "100%" }}>
       <Typography
-        variant="h4"
-        gutterBottom
+        variant="h6"
         sx={{
-          textAlign: "center",
           mb: 2,
-          fontWeight: 700,
+          fontWeight: 600,
           color: "#155263",
-          fontSize: { xs: "2rem", sm: "2.5rem" },
+          fontSize: { xs: "1rem", sm: "1.125rem" },
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
         }}
       >
-        REGULAR SEASON FINISHES BY YEAR/OWNER
-      </Typography>
-
-      <Typography
-        variant="body1"
-        sx={{
-          textAlign: "center",
-          mb: 3,
-          color: "#666",
-          fontStyle: "italic",
-          fontSize: "0.95rem",
-        }}
-      >
-        Each team's final standing at the end of the regular season, each year
+        Regular Season Finishes by Year/Owner
       </Typography>
 
       <Box
