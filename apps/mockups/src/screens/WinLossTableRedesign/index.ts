@@ -1,0 +1,1 @@
+export { WinLossTableRedesign } from "./WinLossTableRedesign";

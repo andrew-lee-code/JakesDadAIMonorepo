@@ -105,24 +105,12 @@ const Analytics = () => {
             elevation={0}
             sx={{
               p: { xs: 2, sm: 3 },
-              mb: 3,
               borderRadius: 3,
               backgroundColor: "#ffffff",
               border: "1px solid #e0e0e0",
             }}
           >
             <RegularSeasonHeatmap />
-          </Paper>
-
-          <Paper
-            elevation={0}
-            sx={{
-              p: { xs: 2, sm: 3 },
-              borderRadius: 3,
-              backgroundColor: "#ffffff",
-              border: "1px solid #e0e0e0",
-            }}
-          >
             <RawWinLossRecords />
           </Paper>
         </DashboardSection>

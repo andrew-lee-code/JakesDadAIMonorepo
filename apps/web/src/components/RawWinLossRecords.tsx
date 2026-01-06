@@ -2,16 +2,14 @@ import React from "react";
 import {
   Box,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   CircularProgress,
   Alert,
+  Avatar,
 } from "@jakes-dad/shared";
 import { useRecords, useOwners } from "../hooks/useRecords";
 import { capitalizeName } from "../utils/stringUtils";
+import { ERA_CONFIG } from "../constants/years";
+import { getOwnerAvatarUrl } from "../utils/imageUtils";
 
 interface YearRecord {
   year: number;
@@ -22,6 +20,41 @@ interface YearRecord {
 interface OwnerRecords {
   owner_name: string;
   records: YearRecord[];
+}
+
+// Helper function to group years by era
+function groupYearsByEra(years: number[]) {
+  const eraGroups: Array<{ label: string; range: string; years: number[] }> =
+    [];
+
+  Object.values(ERA_CONFIG).forEach((config) => {
+    const eraYears = years.filter((y) => config.years.includes(y));
+    if (eraYears.length > 0) {
+      eraGroups.push({
+        label: config.label,
+        range: config.range,
+        years: eraYears.sort((a, b) => a - b),
+      });
+    }
+  });
+
+  return eraGroups;
+}
+
+// Helper function to detect if year is first in a new era
+function isFirstYearInEra(year: number, allYears: number[]): boolean {
+  const yearIndex = allYears.indexOf(year);
+  if (yearIndex === 0) return true;
+
+  const prevYear = allYears[yearIndex - 1];
+  const currentEra = Object.values(ERA_CONFIG).find((e) =>
+    e.years.includes(year)
+  );
+  const prevEra = Object.values(ERA_CONFIG).find((e) =>
+    e.years.includes(prevYear)
+  );
+
+  return currentEra !== prevEra;
 }
 
 const RawWinLossRecords: React.FC = () => {
@@ -65,6 +98,9 @@ const RawWinLossRecords: React.FC = () => {
     (a, b) => a - b
   );
 
+  // Group years by era
+  const eraGroups = groupYearsByEra(allYears);
+
   // Get current owners (active in 2025)
   const currentOwners = owners.filter(
     (owner) => owner.years_active && owner.years_active.includes(2025)
@@ -92,188 +128,224 @@ const RawWinLossRecords: React.FC = () => {
   return (
     <Box sx={{ width: "100%", mt: 4 }}>
       <Typography
-        variant="h4"
-        gutterBottom
+        variant="h6"
         sx={{
-          textAlign: "center",
-          mb: 3,
-          fontWeight: 700,
+          mb: 2,
+          fontWeight: 600,
           color: "#155263",
-          fontSize: { xs: "2rem", sm: "2.5rem" },
+          fontSize: { xs: "1rem", sm: "1.125rem" },
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
         }}
       >
-        RAW WIN/LOSS RECORDS
+        Raw Win/Loss Records
       </Typography>
 
       <Box
         sx={{
-          display: "flex",
-          width: "100%",
-          border: "1px solid",
-          borderColor: "divider",
-          borderRadius: 1,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+          boxShadow: "0 4px 12px rgba(21, 82, 99, 0.15)",
           overflow: "hidden",
         }}
       >
-        {/* Frozen Owner Column */}
-        <Box
-          sx={{
-            flexShrink: 0,
-            width: { xs: 80, sm: 120 },
-            borderRight: "3px solid",
-            borderColor: "divider",
-            backgroundColor: "background.paper",
-          }}
-        >
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell
+        <Box sx={{ display: "flex", position: "relative" }}>
+          {/* Frozen left column with owner names */}
+          <Box
+            sx={{
+              width: { xs: "100px", sm: "140px" },
+              backgroundColor: "#f8f9fa",
+              borderRight: "3px solid #155263",
+              position: "sticky",
+              left: 0,
+              zIndex: 2,
+            }}
+          >
+            {/* Combined OWNER header spanning all 3 header rows */}
+            <Box
+              sx={{
+                height: { xs: "108px", sm: "132px" }, // Sum of all 3 header rows
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontWeight: 700,
+                fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                color: "#155263",
+                backgroundColor: "#f0f0f0",
+                borderBottom: "3px solid #155263",
+              }}
+            >
+              OWNER
+            </Box>
+
+            {/* Owner cells */}
+            {ownerRecords.map((owner, index) => (
+              <Box
+                key={owner.owner_name}
+                sx={{
+                  height: { xs: "36px", sm: "44px" },
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  gap: 0.5,
+                  px: 0.5,
+                  backgroundColor: index % 2 === 0 ? "#fff" : "#fafafa",
+                  borderBottom: "1px solid #e0e0e0",
+                  "&:hover": { backgroundColor: "#f0f0f0" },
+                }}
+              >
+                <Avatar
+                  src={getOwnerAvatarUrl(owner.owner_name)}
+                  alt={owner.owner_name}
                   sx={{
-                    fontWeight: "bold",
-                    backgroundColor: "grey.100",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    p: { xs: 1, sm: 1.5 },
-                    textAlign: "center",
-                    height: { xs: 48, sm: 56 },
+                    width: { xs: 24, sm: 32 },
+                    height: { xs: 24, sm: 32 },
                   }}
                 >
-                  OWNER
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell
+                  {owner.owner_name[0]}
+                </Avatar>
+                <Typography
                   sx={{
-                    fontWeight: "bold",
-                    backgroundColor: "grey.50",
                     fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                    p: { xs: 0.25, sm: 0.5 },
-                    textAlign: "center",
-                    borderBottom: "2px solid",
-                    borderColor: "divider",
-                    height: { xs: 32, sm: 40 },
+                    fontWeight: 700,
+                    color: "#155263",
                   }}
                 >
-                  {/* Empty cell for W/L header alignment */}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {ownerRecords.map((owner) => (
-                <TableRow key={owner.owner_name}>
-                  <TableCell
+                  {owner.owner_name}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+
+          {/* Scrollable data area */}
+          <Box sx={{ flex: 1, overflowX: "auto" }}>
+            <Box sx={{ minWidth: `${allYears.length * 80}px` }}>
+              {/* Era header row */}
+              <Box sx={{ display: "flex", backgroundColor: "#155263" }}>
+                {eraGroups.map((era, eraIndex) => (
+                  <Box
+                    key={era.label}
                     sx={{
-                      fontWeight: "bold",
-                      fontSize: { xs: "0.7rem", sm: "0.875rem" },
-                      p: { xs: 0.5, sm: 1 },
-                      textAlign: "center",
-                      backgroundColor: "background.paper",
-                      height: { xs: 36, sm: 44 },
+                      width: `${era.years.length * 80}px`,
+                      height: { xs: "36px", sm: "44px" },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 700,
+                      fontSize: { xs: "0.7rem", sm: "0.85rem" },
+                      color: "#daa520",
+                      borderBottom: "2px solid #155263",
+                      borderLeft: eraIndex > 0 ? "4px solid #daa520" : "none",
                     }}
                   >
-                    {owner.owner_name}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Box>
+                    {era.label} • {era.range}
+                  </Box>
+                ))}
+              </Box>
 
-        {/* Scrollable Data Section */}
-        <Box
-          sx={{
-            flex: 1,
-            overflowX: "auto",
-            minWidth: 0,
-          }}
-        >
-          <Table size="small" sx={{ minWidth: allYears.length * 80 }}>
-            <TableHead>
-              <TableRow>
-                {allYears.map((year, index) => (
-                  <TableCell
+              {/* Year header row */}
+              <Box sx={{ display: "flex", backgroundColor: "#f0f0f0" }}>
+                {allYears.map((year) => (
+                  <Box
                     key={year}
                     sx={{
-                      fontWeight: "bold",
-                      backgroundColor: "grey.100",
+                      width: "80px",
+                      height: { xs: "40px", sm: "48px" },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 700,
                       fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                      p: { xs: 0.5, sm: 1 },
-                      textAlign: "center",
-                      minWidth: { xs: 60, sm: 80 },
-                      height: { xs: 48, sm: 56 },
-                      borderLeft: index > 0 ? "2px solid" : "none",
-                      borderColor: "grey.300",
+                      color: "#155263",
+                      borderBottom: "2px solid #e0e0e0",
+                      borderLeft: isFirstYearInEra(year, allYears)
+                        ? "4px solid #155263"
+                        : "1px solid #e0e0e0",
                     }}
                   >
                     {year}
-                  </TableCell>
+                  </Box>
                 ))}
-              </TableRow>
-              <TableRow>
-                {allYears.map((year, index) => (
-                  <TableCell
-                    key={`${year}-header`}
+              </Box>
+
+              {/* W/L sub-header row */}
+              <Box sx={{ display: "flex", backgroundColor: "#fafafa" }}>
+                {allYears.map((year) => (
+                  <Box
+                    key={`${year}-wl`}
                     sx={{
-                      fontWeight: "bold",
-                      backgroundColor: "grey.50",
+                      width: "80px",
+                      height: { xs: "32px", sm: "40px" },
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: 700,
                       fontSize: { xs: "0.65rem", sm: "0.75rem" },
-                      p: { xs: 0.25, sm: 0.5 },
-                      textAlign: "center",
-                      borderBottom: "2px solid",
-                      borderColor: "divider",
-                      height: { xs: 32, sm: 40 },
-                      borderLeft: index > 0 ? "2px solid" : "none",
-                      borderLeftColor: "grey.300",
+                      color: "#155263",
+                      borderBottom: "3px solid #155263",
+                      borderLeft: isFirstYearInEra(year, allYears)
+                        ? "4px solid #155263"
+                        : "1px solid #e0e0e0",
+                      gap: 2,
                     }}
                   >
-                    <Box
-                      sx={{ display: "flex", justifyContent: "space-around" }}
-                    >
-                      <span>W</span>
-                      <span>L</span>
-                    </Box>
-                  </TableCell>
+                    <span>W</span>
+                    <span>L</span>
+                  </Box>
                 ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {ownerRecords.map((owner) => (
-                <TableRow key={owner.owner_name}>
-                  {owner.records.map((record, index) => (
-                    <TableCell
+              </Box>
+
+              {/* Data rows */}
+              {ownerRecords.map((owner, ownerIndex) => (
+                <Box
+                  key={owner.owner_name}
+                  sx={{
+                    display: "flex",
+                    "&:hover": {
+                      backgroundColor: "#f0f0f0",
+                    },
+                  }}
+                >
+                  {owner.records.map((record) => (
+                    <Box
                       key={`${owner.owner_name}-${record.year}`}
                       sx={{
+                        width: "80px",
+                        height: { xs: "36px", sm: "44px" },
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
                         fontSize: { xs: "0.7rem", sm: "0.875rem" },
-                        p: { xs: 0.25, sm: 0.5 },
-                        textAlign: "center",
+                        fontWeight: 700,
+                        color: "#155263",
                         backgroundColor:
                           record.wins === 0 && record.losses === 0
-                            ? "grey.50"
-                            : "inherit",
-                        height: { xs: 36, sm: 44 },
-                        borderLeft: index > 0 ? "2px solid" : "none",
-                        borderColor: "grey.300",
+                            ? "#f5f5f5"
+                            : ownerIndex % 2 === 0
+                            ? "#fff"
+                            : "#fafafa",
+                        borderBottom: "1px solid #e0e0e0",
+                        borderLeft: isFirstYearInEra(record.year, allYears)
+                          ? "4px solid #155263"
+                          : "1px solid #e0e0e0",
+                        gap: 1.5,
                       }}
                     >
                       {record.wins === 0 && record.losses === 0 ? (
-                        <span style={{ color: "#999" }}>-</span>
+                        <span style={{ color: "#999" }}>—</span>
                       ) : (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-around",
-                          }}
-                        >
+                        <>
                           <span>{record.wins}</span>
                           <span>{record.losses}</span>
-                        </Box>
+                        </>
                       )}
-                    </TableCell>
+                    </Box>
                   ))}
-                </TableRow>
+                </Box>
               ))}
-            </TableBody>
-          </Table>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>
