@@ -419,7 +419,7 @@ const Home = () => {
             />
 
             <Avatar
-              src="/images/owner_pictures/craig.webp"
+              src="/images/owner_pictures/paul.webp"
               sx={{
                 width: { xs: 70, sm: 90 },
                 height: { xs: 70, sm: 90 },
@@ -429,7 +429,7 @@ const Home = () => {
                 boxShadow: "0 4px 16px rgba(255, 105, 180, 0.3)",
               }}
             >
-              C
+              P
             </Avatar>
 
             <Typography
@@ -441,7 +441,7 @@ const Home = () => {
                 mb: 0.5,
               }}
             >
-              Craig
+              Paul
             </Typography>
 
             <Typography
@@ -452,11 +452,11 @@ const Home = () => {
                 fontSize: "0.9rem",
               }}
             >
-              Sxy Bane
+              Revived Punishments
             </Typography>
           </Paper>
 
-          {/* Most Bitchy */}
+          {/* League Villain */}
           <Paper
             elevation={0}
             sx={{
@@ -487,7 +487,7 @@ const Home = () => {
             />
 
             <Avatar
-              src="/images/owner_pictures/taylor.webp"
+              src="/images/owner_pictures/justin.webp"
               sx={{
                 width: { xs: 70, sm: 90 },
                 height: { xs: 70, sm: 90 },
@@ -497,7 +497,7 @@ const Home = () => {
                 boxShadow: "0 4px 16px rgba(139, 69, 19, 0.3)",
               }}
             >
-              T
+              J
             </Avatar>
 
             <Typography
@@ -509,7 +509,7 @@ const Home = () => {
                 mb: 0.5,
               }}
             >
-              Taylor
+              Justin
             </Typography>
 
             <Typography
@@ -520,7 +520,7 @@ const Home = () => {
                 fontSize: "0.9rem",
               }}
             >
-              Complains A Lot
+              Authoritarian Commish
             </Typography>
           </Paper>
         </Box>

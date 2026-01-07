@@ -5,6 +5,8 @@ import {
   Avatar,
   CircularProgress,
   Alert,
+  EmojiEventsIcon,
+  ToiletIcon,
 } from "@jakes-dad/shared";
 import { useState, useMemo } from "react";
 import { useMemberStats } from "../../hooks/useRecords";
@@ -271,7 +273,9 @@ const Members = () => {
                         borderRadius: 2,
                       }}
                     >
-                      <Typography sx={{ fontSize: "16px" }}>🏆</Typography>
+                      <EmojiEventsIcon
+                        sx={{ fontSize: "16px", color: "#c5901c" }}
+                      />
                       <Typography
                         sx={{
                           fontWeight: 700,
@@ -280,6 +284,35 @@ const Members = () => {
                         }}
                       >
                         {member.hardware}
+                      </Typography>
+                    </Box>
+                  )}
+                  {/* Ultimate Loser Badge */}
+                  {member.ultimateLoser > 0 && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        backgroundColor: "rgba(220, 20, 60, 0.15)",
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 2,
+                      }}
+                    >
+                      <ToiletIcon
+                        size={16}
+                        color="#dc143c"
+                        strokeWidth={2.5}
+                      />
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          color: "#dc143c",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {member.ultimateLoser}
                       </Typography>
                     </Box>
                   )}

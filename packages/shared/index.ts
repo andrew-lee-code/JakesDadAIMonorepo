@@ -103,4 +103,13 @@ export {
   BarChart as BarChartIcon,
   AutoStories as AutoStoriesIcon,
   Settings as SettingsIcon,
+  Wc as WcIcon,
+  Plumbing as PlumbingIcon,
+  Bathtub as BathtubIcon,
+  Bathroom as BathroomIcon,
 } from '@mui/icons-material';
+
+// Re-export Lucide Icons
+export {
+  Toilet as ToiletIcon,
+} from 'lucide-react';

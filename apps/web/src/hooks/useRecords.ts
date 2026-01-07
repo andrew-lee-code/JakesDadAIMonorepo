@@ -25,6 +25,16 @@ export interface Owner {
   years_active: number[];
 }
 
+export interface Season {
+  id: number;
+  created_at: string;
+  year: number | null;
+  playoff_champ_owner_id: number | null;
+  reg_szn_champ_owner_id: number | null;
+  reg_szn_loser_owner_id: number | null;
+  ultimate_loser_owner_id: number | null;
+}
+
 export interface MemberStats {
   owner_id: number;
   name: string;
@@ -32,6 +42,7 @@ export interface MemberStats {
   totalLosses: number;
   winPercentage: string;
   hardware: number;
+  ultimateLoser: number;
   avatar?: string;
 }
 
@@ -45,6 +56,10 @@ export function useRecords() {
   return result;
 }
 
+export function useSeasons() {
+  return useSupabaseQuery<Season>("seasons");
+}
+
 export function useMemberStats(selectedEras: Set<EraKey>) {
   const {
     data: records,
@@ -56,9 +71,14 @@ export function useMemberStats(selectedEras: Set<EraKey>) {
     isLoading: ownersLoading,
     error: ownersError,
   } = useOwners();
+  const {
+    data: seasons,
+    isLoading: seasonsLoading,
+    error: seasonsError,
+  } = useSeasons();
 
   const memberStats = useMemo(() => {
-    if (!records || !owners) return [];
+    if (!records || !owners || !seasons) return [];
 
     // Filter owners to only include those active in 2025
     const targetYear = 2025;
@@ -95,6 +115,7 @@ export function useMemberStats(selectedEras: Set<EraKey>) {
           totalLosses: 0,
           winPercentage: "0.00%",
           hardware: 0,
+          ultimateLoser: 0,
           avatar: getOwnerAvatarUrl(owner.name),
         };
       }
@@ -109,6 +130,20 @@ export function useMemberStats(selectedEras: Set<EraKey>) {
       // Count hardware (playoff championships only)
       if (record.playoff_finish === 1) {
         statsMap[ownerId].hardware += 1; // Playoff championship
+      }
+    });
+
+    // Filter seasons by selected eras
+    const filteredSeasons = filterByEras(
+      seasons.map((s) => ({ ...s, year: s.year || 0 })),
+      selectedEras
+    );
+
+    // Count ultimate losers from seasons table
+    filteredSeasons.forEach((season) => {
+      const loserId = season.ultimate_loser_owner_id;
+      if (loserId != null && statsMap[loserId]) {
+        statsMap[loserId].ultimateLoser += 1;
       }
     });
 
@@ -129,11 +164,11 @@ export function useMemberStats(selectedEras: Set<EraKey>) {
       const bPct = parseFloat(b.winPercentage.replace("%", ""));
       return bPct - aPct;
     });
-  }, [records, owners, selectedEras]);
+  }, [records, owners, seasons, selectedEras]);
 
   return {
     data: memberStats,
-    isLoading: recordsLoading || ownersLoading,
-    error: recordsError || ownersError,
+    isLoading: recordsLoading || ownersLoading || seasonsLoading,
+    error: recordsError || ownersError || seasonsError,
   };
 }
